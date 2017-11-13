@@ -1,6 +1,6 @@
 # ClinSeq
 
-## Autoseq
+## Autoseq Installtion November 9 2017
 
 Project link <https://github.com/ClinSeq/autoseq>
 
