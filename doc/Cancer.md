@@ -1,6 +1,6 @@
 # Cancer pipeline
 
-### Resources and knowledgebase
+## Resources and knowledgebase
 
 1. Mutation Identification Pipeline (MIP):
 	* http://mip-api.readthedocs.io/en/latest/index.html
@@ -22,8 +22,6 @@
 15. DGVa
 16. https://github.com/genome/cancer-genomics-workflow/wiki
 
----
-
 ## Papers
 
 #### Methods and pipelines:
@@ -38,11 +36,14 @@
 	* Alexandrov, L. B., & Stratton, M. R. (2014). Mutational signatures: The patterns of somatic mutations hidden in cancer genomes. Current Opinion in Genetics and Development, 24(1), 52–60. https://doi.org/10.1016/j.gde.2013.11.01
 6. 
 
+---
+
 #### Reviews (including methodological benchmarking):
+
+---
 
 #### Case studies:
 
----
 
 ## Tools:
 
