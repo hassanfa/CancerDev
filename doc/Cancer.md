@@ -1,6 +1,19 @@
-# Cancer pipeline
+#Cancer pipeline notes
 
-## Resources and knowledgebase
+##Table of Content
+
+1. [Resources](#resources)
+
+2. [Publications](#papers)
+	1. [Pipelines, and reviews](#mainpapers)
+	
+	2. [Methods and tools](#methodpapers)
+	3. [Notable papers](#otherpapers)
+3. [Tools](#bioinfotools)
+
+
+## Resources <a name="resources"></a>
+**_Main resources including knowledge base and databases necessary for pipeline development_**
 
 1. **Mutation Identification Pipeline (MIP)**:
 	* http://mip-api.readthedocs.io/en/latest/index.html
@@ -30,9 +43,11 @@
 23. **Drug sensitivity in cancer**: Identifying molecular features of cancers that predict response to anti-cancer drugs. http://www.cancerrxgene.org/ Download link: ftp://ftp.sanger.ac.uk/pub4/cancerrxgene/releases
 24. **VarSome**: VarSome is a knowledge base and aggregator for human genomic variants. https://varsome.com/about/
 
-## Relevant publications:
+## Publications <a name="papers"></a>
 
-#### Pipelines, and review (including methodological benchmarking):
+### Pipelines, and reviews <a name="mainpapers"></a>
+**_Including methodological benchmarking_**
+
 1. **MSK-IMPACT:**
 	* **Original pipeline**: Cheng, D. T., Mitchell, T. N., Zehir, A., Shah, R. H., Benayed, R., Syed, A., … Berger, M. F. (2015). Memorial sloan kettering-integrated mutation profiling of actionable cancer targets (MSK-IMPACT): A hybridization capture-based next-generation sequencing clinical assay for solid tumor molecular oncology. Journal of Molecular Diagnostics, 17(3), 251–264. https://doi.org/10.1016/j.jmoldx.2014.12.006
 	
@@ -50,7 +65,8 @@
 8. **Review on driver gene methods**: Tokheim, C. J., Papadopoulos, N., Kinzler, K. W., Vogelstein, B., & Karchin, R. (2016). Evaluating the evaluation of cancer driver genes. Proceedings of the National Academy of Sciences, 113(50), 14330–14335. https://doi.org/10.1073/pnas.1616440113
 
 ---
-#### Methods and tools (excluding multiple method comparison or benchmarking tools):
+### Methods and tools <a name="methodpapers"></a>
+**_Excluding multiple method comparison or benchmarking tools_**
 
 * **BreakDancer**: Chen, K., Wallis, J. W., Mclellan, M. D., Larson, D. E., Kalicki, J. M., Pohl, C. S., … Elaine, R. (2013). BreakDancer - An algorithm for high resolution mapping of genomic structure variation. Nature Methods, 6(9), 677–681. https://doi.org/10.1038/nmeth.1363.BreakDancer
 
@@ -65,14 +81,19 @@
 * **MutationalPatterns**: Blokzijl, F., Janssen, R., van Boxtel, R., & Cuppen, E. (2017). MutationalPatterns: comprehensive genome-wide analysis of mutational processes. bioRxiv, 1–20. https://doi.org/https://doi.org/10.1101/071761
 * **MaSuRCA**: Zimin, A. V., Marçais, G., Puiu, D., Roberts, M., Salzberg, S. L., & Yorke, J. A. (2013). The MaSuRCA genome assembler. Bioinformatics, 29(21), 2669–2677. https://doi.org/10.1093/bioinformatics/btt476
 * **VarDict**: Lai, Z., Markovets, A., Ahdesmaki, M., Chapman, B., Hofmann, O., Mcewen, R., … Dry, J. R. (2016). VarDict: A novel and versatile variant caller for next-generation sequencing in cancer research. Nucleic Acids Research, 44(11), 1–11. https://doi.org/10.1093/nar/gkw227
+* **vt**: Tan, A., Abecasis, G. R., & Kang, H. M. (2015). Unified representation of genetic variants. Bioinformatics, 31(13), 2202–2204. https://doi.org/10.1093/bioinformatics/btv112
+* **peddy**: Pedersen, B. S., & Quinlan, A. R. (2017). Who’s Who? Detecting and Resolving Sample Anomalies in Human DNA Sequencing Studies with Peddy. American Journal of Human Genetics, 100(3), 406–413. https://doi.org/10.1016/j.ajhg.2017.01.017
+* **GQT**: Layer, R. M., Kindlon, N., Karczewski, K. J., & Quinlan, A. R. (2015). Efficient genotype compression and analysis of large genetic-variation data sets. Nature Methods, 13(1). https://doi.org/10.1038/nmeth.3654
 
 ---
-#### Notable, resource, or general papers related to cancer genomics:
+### Notable papers <a name="otherpapers"></a>
+**_Resource, or general notable papers including resource and KB papers related to cancer genomics_**
 
 1. **GIAB**: Zook, J. M., Catoe, D., McDaniel, J., Vang, L., Spies, N., Sidow, A., … Salit, M. (2016). Extensive sequencing of seven human genomes to characterize benchmark reference materials. Scientific Data, 3, 160025. https://doi.org/10.1038/sdata.2016.25
 
 
-## Tools:
+## Tools <a name="bioinfotools"></a>
+**_Tool sets and softwares required at various steps of pipeline development_**
 
 1. **Teaser**: NGS readmapping benchmarking.
 	* http://teaser.cibiv.univie.ac.at/
@@ -113,7 +134,7 @@
 22. **Manta**: Structural variant caller https://github.com/Illumina/manta
 23. **PurBayes**: estimate tumor purity and clonality
 24. **VarDict**: variant caller for both single and paired sample variant calling from BAM files https://github.com/AstraZeneca-NGS/VarDict
-25. **SNPeff**: Genomic variant annotations and functional effect prediction toolbox. http://snpeff.sourceforge.net/
+25. **SNPeff/SNPSift**: Genomic variant annotations and functional effect prediction toolbox. http://snpeff.sourceforge.net/ and http://snpeff.sourceforge.net/SnpSift.html
 26. **IGV**: visualization tool for interactive exploration http://software.broadinstitute.org/software/igv/
 27. **SVDetect**: a tool to detect genomic structural variations http://svdetect.sourceforge.net/Site/Home.html
 28. **GenomeSTRiP**: A suite of tools for discovering and genotyping structural variations using sequencing data http://software.broadinstitute.org/software/genomestrip/
@@ -124,4 +145,11 @@
 33. **Probablistic2020**: Simulates somatic mutations, and calls statistically significant oncogenes and tumor suppressor genes based on a randomization-based test  https://github.com/KarchinLab/probabilistic2020
 34. **2020plus**: Classifies genes as an oncogene, tumor suppressor gene, or as a non-driver gene by using Random Forests https://github.com/KarchinLab/2020plus
 35. **vtools**: variant tools is a software tool for the manipulation, annotation, selection, simulation, and analysis of variants in the context of next-gen sequencing analysis. http://varianttools.sourceforge.net/Main/HomePage
+36. **vt**: A variant tool set that discovers short variants from Next Generation Sequencing data. https://genome.sph.umich.edu/wiki/Vt and https://github.com/atks/vt
+37. **CNVnator**: a tool for CNV discovery and genotyping from depth-of-coverage by mapped reads. https://github.com/abyzovlab/CNVnator
+38. **SvABA**: Structural variation and indel detection by local assembly. https://github.com/walaj/svaba
+39. **indelope**: find indels and SVs too small for structural variant callers and too large for GATK. https://github.com/brentp/indelope
+40. **peddy**: peddy compares familial-relationships and sexes as reported in a PED/FAM file with those inferred from a VCF. https://github.com/brentp/peddy
+41. **cyvcf2**: cyvcf2 is a cython wrapper around htslib built for fast parsing of Variant Call Format (VCF) files. https://github.com/brentp/cyvcf2
+42. **GQT**: Genotype Query Tools (GQT) is command line software and a C API for indexing and querying large-scale genotype data sets. https://github.com/ryanlayer/gqt
 
