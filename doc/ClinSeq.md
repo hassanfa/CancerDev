@@ -1,6 +1,6 @@
 # ClinSeq
 
-## Autoseq Installtion November 9 2017
+## Autoseq Installation November 9 2017
 
 Project link <https://github.com/ClinSeq/autoseq>
 
@@ -14,7 +14,7 @@ vt <https://genome.sph.umich.edu/wiki/Vt> was installed using brew:
 brew install homebrew/science/vt
 ```
 
-Requirments for VEP <https://www.ensembl.org/info/docs/tools/vep/script/vep_download.html> and the missing Bio::DB:HTS was installed using cpan:
+Requirements for VEP <https://www.ensembl.org/info/docs/tools/vep/script/vep_download.html> and the missing Bio::DB:HTS was installed using cpan:
 
 ```
 brew install homebrew/science/htslib
@@ -329,7 +329,7 @@ SNPs can be filtered using `bcftools view`:
 
 ```bash
 #The following was run on Mac OS X, and the result is not hardlinked in the autoseq pipeline yet.
-#The solution is to filter from newer version of dbSNP, filterout nonmatching dbSNP version,
+#The solution is to filter from newer version of dbSNP, filter out non-matching dbSNP version,
 #and swap the hard link: file:///Users/hassanforoughi/Desktop/playground/server-listing.txt .
 #A more elegant solution would be to incorporate this analysis into the generate_ref_files_pipeline.py
 brew install bcftools
@@ -341,8 +341,7 @@ bcftools view -e dbSNPBuildID=149 --threads 2 All_20161121.vcf.gz > All_20161121
 Finally, after fixing installation, and granting permission to create directory on the following directory: `/scratch/tmp/`, `generate-ref` was successfully run and finished.
 
 ```
-$ generate-ref --genome-resources /nfs/ALASCCA/genome-resources --outdir /nfs/
-ALASCCA/autoseq-genome
+$ generate-ref --genome-resources /nfs/ALASCCA/genome-resources --outdir /nfs/ALASCCA/autoseq-genome
 INFO 2017-11-10 09:07:32,720 setup_logging - Started log with loglevel INFO
 INFO 2017-11-10 09:07:32,720 main - Writing to /nfs/ALASCCA/autoseq-genome
   [####################################]  100%  Done!
@@ -360,4 +359,130 @@ sudo chmod a+w /scratch/tmp
 
 but still there were some issues with the during the installation when it comes to creating directories in ```/scratch/tmp/```
 
+
+## Autoseq Installation November 14 2017
+
+
+### Installing using vagrant and vms
+
+**Resources:** 1. Vagrant 2. virtual box
+
+```bash
+mkdir -p vms/testing_setup
+cd vms/testing_setup
+git clone https://github.com/ClinSeq/fairbanks
+
+cd fairbanks
+vagrant up
+
+vagrant ssh
+
+vagrant ssh
+cd
+git clone https://github.com/clinseq/alascca-dotfiles.git /nfs/ALASCCA/alascca-dotfiles
+cd /nfs/ALASCCA/alascca-dotfiles
+
+#enter ALASCCA production environment
+. /nfs/ALASCCA/alascca-dotfiles/.bash_profile
+
+#install prerequisites
+bash install-prereqs.sh
+
+generate-ref --genome-resources /nfs/ALASCCA/genome-resources --outdir /nfs/ALASCCA/autoseq-genome
+```
+
+generate-ref output
+
+```
+INFO 2017-11-21 15:08:07,402 setup_logging - Started log with loglevel INFO
+INFO 2017-11-21 15:08:07,402 main - Writing to /nfs/ALASCCA/autoseq-genome
+  [####################################]  100%  Done!
+INFO 2017-11-21 19:58:47,557 run - Pipeline finished successfully.
+```
+
+## Autoseq integration test November 24, 2017
+
+```bash
+cd $FAIRBANKS
+vagrant ssh
+. /nfs/ALASCCA/alascca-dotfiles/.bash_profile
+autoseqapi -c /nfs/ALASCCA/clinseq-info/config/autoseq-api/autoseqapi-config-prod_finaltests.json --port 8501 --max-cores 4
+```
+
+On another terminal run:
+
+```bash
+cd $FAIRBANKS
+ssh vagrant@10.10.10.93 -L 9000:localhost:9000 -L 5432:localhost:5432 -L 5001:localhost:5001  -L 8501:localhost:8501 -L 27017:localhost:27017
+. /nfs/ALASCCA/alascca-dotfiles/.bash_profile
+aurora -c /nfs/ALASCCA/clinseq-info/config/aurora/aurora-config-prod_debug.json
+```
+
+And in the browser it can be seen via: localhost:5001
+
+At the browse menu in Aurora, an excel file of samples can be uploaded.
+
+Config files are located at: ```/nfs/ALASCCA/clinseq-info/config/autoseq-api/```. Please remember to update the database versions that were changed and explained above.
+
+Several different places have the data located and this introduces bugs, for example autoseq integration tests fail where vep is not configured in the json file. In order to fix this issue following rules have been fixed and the the above two blocks of code are run again.
+
+```bash
+cd /tmp
+tar -xvzf test-libraries.tar.gz
+mv /tmp/test-genome/autoseq-genome.json /tmp/test-genome/autoseq-genome.json.bk
+sed "s/\"vep_dir\"\: null/\"vep_dir\"\: \"\/nfs\/ALASCCA\/autoseq-genome\/vep\"/g" \
+	/tmp/test-genome/autoseq-genome.json.bk > /tmp/test-genome/autoseq-genome.json
+
+cd /nfs/ALASCCA/autoseq
+python ./tests/run-integration-tests.py
+```
+
+The output of integration test:
+
+```bash
+Output path exists, delete old files? (Use 'N' to continue with the present state) [Y/n] Y
+======================================================================================= test session starts ========================================================================================
+platform linux2 -- Python 2.7.14, pytest-3.1.2, py-1.4.34, pluggy-0.4.0
+rootdir: /nfs/ALASCCA/autoseq, inifile:
+plugins: cov-2.5.1
+collected 9 items 
+
+tests/integration/test_alascca.py INFO 2017-11-24 13:18:53,470 setup_logging - Started log with loglevel INFO
+INFO 2017-11-24 13:18:53,473 alascca - Running Alascca pipeline
+INFO 2017-11-24 13:18:53,473 alascca - sample is <open file 'tests/alascca-test-sample_low_purity.json', mode 'r' at 0x7ff0de3a34b0>
+INFO 2017-11-24 13:18:53,499 alascca - Waiting for AlasccaPipeline to finish.
+  [####################################]  100%  Done!
+INFO 2017-11-24 13:18:53,950 run - Pipeline finished successfully. 
+.INFO 2017-11-24 13:18:59,207 setup_logging - Started log with loglevel INFO
+INFO 2017-11-24 13:18:59,209 alascca - Running Alascca pipeline
+INFO 2017-11-24 13:18:59,210 alascca - sample is <open file 'tests/alascca-test-sample.json', mode 'r' at 0x7f2eba6ae4b0>
+INFO 2017-11-24 13:18:59,221 alascca - Waiting for AlasccaPipeline to finish.
+  [####################################]  100%  Done!                                                                                   
+INFO 2017-11-24 13:26:50,571 run - Pipeline finished successfully. 
+........
+
+==================================================================================== 9 passed in 482.08 seconds ====================================================================================
+```
+
+Rest of the integration test for ```test_liqbio.py``` suit failed due to statMatrix package in R missing colMedians functions. This might be due to old or different version of package being loaded.
+
+### _**TODO:**_ Fix the statMatrix package in R
+
+Part of the output for ```test_liqbio.py``` can be found below:
+
+```bash
+======================================================================================= test session starts ========================================================================================
+platform linux2 -- Python 2.7.14, pytest-3.1.2, py-1.4.34, pluggy-0.4.0
+rootdir: /nfs/ALASCCA/autoseq, inifile:
+plugins: cov-2.5.1
+collected 7 items 
+
+tests/integration/test_liqbio.py INFO 2017-11-24 13:26:55,952 setup_logging - Started log with loglevel INFO
+INFO 2017-11-24 13:26:55,952 liqbio - Running Liquid Biopsy pipeline
+INFO 2017-11-24 13:26:55,952 liqbio - Sample is <open file 'tests/liqbio-test-sample.json', mode 'r' at 0x7ffa6edd24b0>
+INFO 2017-11-24 13:26:55,979 liqbio - Waiting for pipeline to finish.
+  [##################------------------]   52%  0d 00:08:32  qdnaseq                                                                                  WARNING 2017-11-24 13:36:02,188 run - Task qdnaseq failed with exit code 1
+WARNING 2017-11-24 13:36:02,188 run - Contents of /home/vagrant/tmp/liqbio-test/cnv/AL-P-NA12877-N-03098121-TD-WG-qdnaseq.segments.txt.out:
+WARNING 2017-11-24 13:36:02,188 run - No methods found in "matrixStats" for requests: colMedians
+```
 

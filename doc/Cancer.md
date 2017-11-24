@@ -10,6 +10,8 @@
 	2. [Methods and tools](#methodpapers)
 	3. [Notable papers](#otherpapers)
 3. [Tools](#bioinfotools)
+4. [Prototyping](#prototype)
+	1. [Sample dataset](#sample_data)
 
 
 ## Resources <a name="resources"></a>
@@ -42,6 +44,7 @@
 22. **dbVar**: dbVar is NCBI's database of genomic structural variation – insertions, deletions, duplications, inversions, mobile element insertions, translocations, and complex chromosomal rearrangements https://www.ncbi.nlm.nih.gov/dbvar Download link: https://www.ncbi.nlm.nih.gov/dbvar/content/ftp_manifest/
 23. **Drug sensitivity in cancer**: Identifying molecular features of cancers that predict response to anti-cancer drugs. http://www.cancerrxgene.org/ Download link: ftp://ftp.sanger.ac.uk/pub4/cancerrxgene/releases
 24. **VarSome**: VarSome is a knowledge base and aggregator for human genomic variants. https://varsome.com/about/
+25. **Google Genomics Public Data**: Google Genomics helps the life science community organize the world’s genomic information and make it accessible and useful. https://cloud.google.com/genomics/ and http://googlegenomics.readthedocs.io
 
 ## Publications <a name="papers"></a>
 
@@ -152,4 +155,14 @@
 40. **peddy**: peddy compares familial-relationships and sexes as reported in a PED/FAM file with those inferred from a VCF. https://github.com/brentp/peddy
 41. **cyvcf2**: cyvcf2 is a cython wrapper around htslib built for fast parsing of Variant Call Format (VCF) files. https://github.com/brentp/cyvcf2
 42. **GQT**: Genotype Query Tools (GQT) is command line software and a C API for indexing and querying large-scale genotype data sets. https://github.com/ryanlayer/gqt
+43. **LOFTEE**: Loss-Of-Function Transcript Effect Estimator. A VEP plugin to identify LoF (loss-of-function) variation. Assesses variants that are: Stop-gained, Splice site disrupting, and Frameshift variants. https://github.com/konradjk/loftee
+44. **PureCN**: copy number calling and SNV classification using targeted short read sequencing https://bioconductor.org/packages/release/bioc/html/PureCN.html
+45. **SVCaller**: A structural variant caller. https://github.com/tomwhi/svcaller
+
+## Prototyping <a name="prototype"></a>
+**_A prototype for cancer pipeline_**
+
+### Sample datasets <a name="sample_data"></a>
+**_Sample datasets for cancer pipeline_**
+
 
