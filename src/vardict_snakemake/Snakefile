@@ -1,0 +1,144 @@
+# vim: syntax=python tabstop=4 expandtab
+# vim: Limelight
+# vim: let g:limelight_eop = '\"\n^'
+# vim: let g:limelight_paragraph_span = 0 
+# vim: let g:limelight_bop = '^rule'
+# vim: let g:limelight_default_coefficient=1
+# coding: utf-8
+# Sample data should be downloaded from snakemake's bitbucket repository and prepared as an
+# "external" resources. To be more percise:
+#   mkdir -p vardict_snakemake
+#   cd vardict_snakemake
+#   mkdir -p snakemake_sample_data
+#   cd snakemake_sample_data
+#   wget https://bitbucket.org/snakemake/snakemake/downloads/snakemake-tutorial-data.tar.gz
+#   tar -xf snakemake-tutorial-data.tar.gz
+#   rm requirements.txt
+#   rm snakemake-tutorial-data.tar.gz 
+#   mv data ref_data
+#   cd ref_data
+#   rm genome.fa.*
+#   cd samples
+#   cp A.fastq tumor.fastq
+#   cp B.fastq normal.fastq
+#   cd ..
+#   cd ..
+#   mv ref_data ../
+#   cd ..
+#   rm -rf snakemake_sample_data
+# Then move the Snakefile and run snakemake on it.
+
+SAMPLES = ["tumor", "normal"]
+
+rule final:
+    input:
+        "data/output/calls/tumor_vs_normal.vcf",
+
+rule get_genome:
+    output:
+        "data/db/genome.fa"
+    shell:
+        "mkdir -p data; "
+        "mkdir -p data/db; "
+        "cp ref_data/genome.fa data/db/"
+
+rule get_fastq:
+    input:
+        "ref_data/samples/{sample}.fastq"
+    output:
+        "data/samples/{sample}.fastq"
+    shell:
+        "mkdir -p data/samples; "
+        "cp {input} data/samples/; "
+
+rule ref_genome_index:
+    input:
+        fa="data/db/genome.fa"
+    output:
+        expand("data/db/genome.fa.{prefix}", prefix=["amb","ann","bwt","pac","sa"])
+    shell:
+        "bwa index {input.fa}; "
+        "samtools faidx {input.fa}; "
+
+rule bwa_map:
+    input:
+        fa="data/db/genome.fa",
+        fastq="data/samples/{sample}.fastq",
+        refidx=expand("data/db/genome.fa.{prefix}", prefix=["amb","ann","bwt","pac","sa"])
+    output:
+        "data/output/mapped_reads/{sample}.bam"
+    log:
+        "data/logs/bwa_mem/{sample}.log"
+    shell:
+        "bwa mem {input.fa} {input.fastq} | samtools view -Sb - > {output} 2> {log}"
+
+rule samtools_sort:
+    input:
+        bam="data/output/mapped_reads/{sample}.bam"
+    output:
+        "data/output/mapped_reads/{sample}.sorted.bam"
+    shell:
+        "samtools sort -T mapped_reads/{wildcards.sample} "
+        "-O bam {input.bam} > {output}"
+
+rule remove_duplicate:
+    input:
+        bam="data/output/mapped_reads/{sample}.sorted.bam"
+    output:
+        bam="data/output/mapped_reads/{sample}.rmdup.bam"
+    log:
+        stats="data/logs/picard_stats/{sample}.rmdup.bam.txt"
+    shell:
+        "picard MarkDuplicates "
+        "INPUT={input.bam} "
+        "OUTPUT={output.bam} "
+        "VALIDATION_STRINGENCY=SILENT "
+        "MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1000 "
+        "REMOVE_DUPLICATES=TRUE "
+        "METRICS_FILE='{log.stats}'"
+
+rule samtools_index:
+    input:
+        "data/output/mapped_reads/{sample}.rmdup.bam"
+    output:
+        "data/output/mapped_reads/{sample}.rmdup.bam.bai"
+    shell:
+        "samtools index {input}"
+
+rule samtools_merge:
+    input:
+        bam=expand("data/output/mapped_reads/{sample}.rmdup.bam", sample=SAMPLES)
+    output:
+        mergedbam="data/output/mapped_reads/merged.bam"
+    shell:
+        "samtools merge -f {output.mergedbam} {input.bam}"
+
+rule vardict_varcall_prepare_bed:
+    input:
+        mergedbam="data/output/mapped_reads/merged.bam"
+    output:
+        bed="data/output/mapped_reads/merged.bed"
+    shell:
+        "samtools view {input.mergedbam} "
+        " | awk -v OFS=\"\\t\" "
+        "'$3==\"I\" {{if (c[$3]==0) {{c[$3]=1; min[$3]=$4; max[$3]=$4;}} "
+        "if (min[$3]>$4) min[$3]=$4; if (max[$3]<$4) max[$3]=$4}}"
+        "END{{for (x in min) print x,min[x],max[x]}}' > {output.bed}"
+
+rule vardict_varcall_paired:
+    input:
+        fa="data/db/genome.fa",
+        bamN=expand("data/output/mapped_reads/{sample}.rmdup.bam", sample=SAMPLES[1]),
+        bamT=expand("data/output/mapped_reads/{sample}.rmdup.bam", sample=SAMPLES[0]),
+        bed="data/output/mapped_reads/merged.bed",
+        bai=expand("data/output/mapped_reads/{sample}.rmdup.bam.bai", sample=SAMPLES)
+    output:
+        "data/output/calls/tumor_vs_normal.vcf"
+    shell:
+        "vardict -G {input.fa} -f 0.01 -N TumorName "
+        "-b \"{input.bamT}|{input.bamN}\" "
+        "-c 1 -S 2 -E 3 -g 4 {input.bed} "
+        "| testsomatic.R "
+        "| var2vcf_paired.pl -N \"TumorName|NormalName\" -f 0.01 "
+        "> {output}"
+

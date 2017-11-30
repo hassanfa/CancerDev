@@ -485,4 +485,4 @@ INFO 2017-11-24 13:26:55,979 liqbio - Waiting for pipeline to finish.
 WARNING 2017-11-24 13:36:02,188 run - Contents of /home/vagrant/tmp/liqbio-test/cnv/AL-P-NA12877-N-03098121-TD-WG-qdnaseq.segments.txt.out:
 WARNING 2017-11-24 13:36:02,188 run - No methods found in "matrixStats" for requests: colMedians
 ```
-
+Next step is to upload the an XLS document on the web interface to make a test run on test genome, and it will be followed by running the actual pipeline on the real data.
