@@ -10,8 +10,6 @@
 	2. [Methods and tools](#methodpapers)
 	3. [Notable papers](#otherpapers)
 3. [Tools](#bioinfotools)
-4. [Prototyping](#prototype)
-	1. [Sample dataset](#sample_data)
 
 
 ## Resources <a name="resources"></a>
@@ -163,119 +161,8 @@
 48. **wgsim**: Wgsim is a small tool for simulating sequence reads from a reference genome. It is able to simulate diploid genomes with SNPs and insertion/deletion (INDEL) polymorphisms, and simulate reads with uniform substitution sequencing errors. https://github.com/lh3/wgsim
 49. **dwgsim**: Whole genome simulation can be performed with dwgsim. dwgsim is based off of wgsim found in SAMtools. https://github.com/nh13/DWGSIM
 
-## Prototyping <a name="prototype"></a>
-#### A prototype for cancer pipeline
 
-**Workflow manager**: [Snakemake](http://snakemake.readthedocs.io/en/stable/index.html) was used for workflow management. The choice is made because of its ease of use, rapid prototyping, and benchmarking made easy solution.
 
-**Datasets**: Three major sources for dataset are sought:
-	1. Sample data from SnakeMake's tutorial which includes three fastq files and a genome.fa file (including bwa indexes)
-	2. Simulated data generated from wgsim/dwgsim from samtools toolset.
-	3. Real datasets from publicly available data. For example data from [notes.md](../../../notes/2017_November.md) on November 16, 2017
-
-**Data preparation from snakemake's tutorial data**:
-
-Sample dataset will be downloaded and put in the directory to act as pseudo link for sample preparation. So that Snakefile can reused for similar cases with similar filenames.
-
-**_FIXME_**: Make the following a rule in the Snakefile.
-
-```bash
-# create directory for vardict Snakefile's input data
-mkdir -p vardict_snakemake
-cd vardict_snakemake
-# create a temporary download directory
-mkdir -p snakemake_sample_data
-cd snakemake_sample_data
-#download data from snakemake's bitbucket
-wget https://bitbucket.org/snakemake/snakemake/downloads/snakemake-tutorial-data.tar.gz
-tar -xf snakemake-tutorial-data.tar.gz
-#remove unwanted files
-rm requirements.txt
-rm snakemake-tutorial-data.tar.gz
-#rename files directories
-mv data ref_data
-cd ref_data
-rm genome.fa.*
-cd samples
-cp A.fastq tumor.fastq
-cp B.fastq normal.fastq
-cd ../../
-mv ref_data ../
-cd ..
-rm -rf snakemake_sample_data
-```
-
-Now the in the ```vardict_snakemake``` directory, there should be a ```ref_data``` directory which Snakefile can use to run the pipeline. Running ```snakemake --forceall -p``` should create the results and a data directory containing the following:
-
-```
-$ tree data
-data
-├── db
-│   ├── genome.fa
-│   ├── genome.fa.amb
-│   ├── genome.fa.ann
-│   ├── genome.fa.bwt
-│   ├── genome.fa.fai
-│   ├── genome.fa.pac
-│   └── genome.fa.sa
-├── logs
-│   ├── bwa_mem
-│   │   ├── normal.log
-│   │   └── tumor.log
-│   └── picard_stats
-│       ├── normal.rmdup.bam.txt
-│       └── tumor.rmdup.bam.txt
-├── output
-│   ├── calls
-│   │   └── tumor_vs_normal.vcf
-│   └── mapped_reads
-│       ├── merged.bam
-│       ├── merged.bed
-│       ├── normal.bam
-│       ├── normal.rmdup.bam
-│       ├── normal.rmdup.bam.bai
-│       ├── normal.sorted.bam
-│       ├── tumor.bam
-│       ├── tumor.rmdup.bam
-│       ├── tumor.rmdup.bam.bai
-│       └── tumor.sorted.bam
-└── samples
-    ├── normal.fastq
-    └── tumor.fastq
-
-8 directories, 24 files
-```
-To generate graphs run the following within ```vardict_snakemake```:
-
-* Rulegraph:
-
-```bash
-GRAPHDATE=`date +%Y%m%d`
-DAGTYPE="rulegraph"
-snakemake --`echo $DAGTYPE` --forceall \
-	| sed "s/digraph snakemake_dag {/digraph snakemake_dag { labelloc=\"t\"\; label=\"Title: ${DAGTYPE} for variant calling\"\;/g" \
-	| dot -Tsvg > ../../img/varcall.${DAGTYPE}.${GRAPHDATE}.svg
-open ../../img/varcall.${DAGTYPE}.${GRAPHDATE}.svg
-echo -e "../../img/varcall.${DAGTYPE}.${GRAPHDATE}.svg"
-unset GRAPHDATE
-unset DAGTYPE
-``` 
-![vardict](../img/varcall.rulegraph.20171130.svg)
-
-* Dag:
-
-```bash
-GRAPHDATE=`date +%Y%m%d`
-DAGTYPE="dag"
-snakemake --`echo $DAGTYPE` --forceall \
-	| sed "s/digraph snakemake_dag {/digraph snakemake_dag { labelloc=\"t\"\; label=\"Title: ${DAGTYPE} for variant calling\"\;/g" \
-	| dot -Tsvg > ../../img/varcall.${DAGTYPE}.${GRAPHDATE}.svg
-open ../../img/varcall.${DAGTYPE}.${GRAPHDATE}.svg
-echo -e "../../img/varcall.${DAGTYPE}.${GRAPHDATE}.svg"
-unset GRAPHDATE
-unset DAGTYPE
-``` 
-![vardict](../img/varcall.dag.20171130.svg)
 
 
 
