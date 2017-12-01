@@ -5,28 +5,6 @@
 # vim: let g:limelight_bop = '^rule'
 # vim: let g:limelight_default_coefficient=1
 # coding: utf-8
-# Sample data should be downloaded from snakemake's bitbucket repository and prepared as an
-# "external" resources. To be more percise:
-#   mkdir -p vardict_snakemake
-#   cd vardict_snakemake
-#   mkdir -p snakemake_sample_data
-#   cd snakemake_sample_data
-#   wget https://bitbucket.org/snakemake/snakemake/downloads/snakemake-tutorial-data.tar.gz
-#   tar -xf snakemake-tutorial-data.tar.gz
-#   rm requirements.txt
-#   rm snakemake-tutorial-data.tar.gz 
-#   mv data ref_data
-#   cd ref_data
-#   rm genome.fa.*
-#   cd samples
-#   cp A.fastq tumor.fastq
-#   cp B.fastq normal.fastq
-#   cd ..
-#   cd ..
-#   mv ref_data ../
-#   cd ..
-#   rm -rf snakemake_sample_data
-# Then move the Snakefile and run snakemake on it.
 
 SAMPLES = ["tumor", "normal"]
 
