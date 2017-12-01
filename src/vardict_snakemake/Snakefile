@@ -11,7 +11,6 @@ SAMPLES = ["tumor", "normal"]
 rule final:
     input:
         "output/calls/tumor_vs_normal.vcf",
-        
 
 rule get_data:
     output:
