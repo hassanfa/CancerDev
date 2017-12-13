@@ -9,8 +9,13 @@
 SAMPLES = ["tumor", "normal"]
 ref_data_prefix = "../../data/snakemake_tutorial_data_131217/"
 
+include:
+  "snakemake_tutorial_data.SnakeFile"
+
 rule final:
     input:
+#        expand(ref_data_prefix + "ref_data/samples/{sample}.fastq", sample=SAMPLES),
+#        ref_data_prefix + "ref_data/db/genome.fa",
         "output/calls/tumor_vs_normal.vcf",
 
 rule ref_genome_index:
