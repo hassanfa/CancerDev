@@ -42,7 +42,7 @@
 22. **dbVar**: dbVar is NCBI's database of genomic structural variation – insertions, deletions, duplications, inversions, mobile element insertions, translocations, and complex chromosomal rearrangements https://www.ncbi.nlm.nih.gov/dbvar Download link: https://www.ncbi.nlm.nih.gov/dbvar/content/ftp_manifest/
 23. **Drug sensitivity in cancer**: Identifying molecular features of cancers that predict response to anti-cancer drugs. http://www.cancerrxgene.org/ Download link: ftp://ftp.sanger.ac.uk/pub4/cancerrxgene/releases
 24. **VarSome**: VarSome is a knowledge base and aggregator for human genomic variants. https://varsome.com/about/
-25. **Google Genomics Public Data**: Google Genomics helps the life science community organize the world’s genomic information and make it accessible and useful. https://cloud.google.com/genomics/ and http://googlegenomics.readthedocs.io
+25. **Google Genomics Public Data**: Google Genomics helps the life science community organize the world’s genomic information and make it accessible and useful. and http://googlegenomics.readthedocs.io
 
 ## Publications <a name="papers"></a>
 

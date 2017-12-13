@@ -1,16 +1,23 @@
 ## Table of Content
 
-1. [Vardict](#1.Vardict)
+1. [Vardict - SnakeMake's sample data](#1.Vardict)
 	1. [Tools](#1.1.tools)
 
-	2. [Datasets](#1.2.datasets)
+	2. [Dataset](#1.2.dataset)
+
+	3. [Pipeline](#1.3.pipeline)
+		* [Dataset 1](#1.3.1.SnakemakeData)
+2. [Vardict - Simulated data](#1.Vardict)
+	1. [Tools](#1.1.tools)
+
+	2. [Dataset](#1.2.dataset)
 
 	3. [Pipeline](#1.3.pipeline)
 		* [Dataset 1](#1.3.1.SnakemakeData)
 
-## 1. Vardict <a name="1.Vardict"></a>
+## 1. Vardict - SnakeMake's sample data <a name="1.Vardict"></a>
 
-A simple pipeline to run Vardict is described below.
+A simple pipeline to run Vardict.
 
 ### 1.1 Choice of tools <a name="1.1.Tools"></a>
 
@@ -18,18 +25,20 @@ A simple pipeline to run Vardict is described below.
 
 **Aligner**: BWA
 
-**Post alignment QC and data preparation**: samtools and picard MarkDuplicates
+**Post alignment QC and data preparation**: samtools, MarkDuplicates, fastqc
 
 **Variant calling**: Vardict
 
 --
-### 1.2 Datasets <a name="1.2.datasets"></a>
+### 1.2 Dataset <a name="1.2.dataset"></a>
 
 Three major sources for dataset are sought:
 
 1. Sample data from SnakeMake's tutorial which includes three fastq files and a genome.fa file (including bwa indexes)
-2. Simulated data generated from wgsim/dwgsim from samtools toolset.
-3. Real datasets from publicly available data. For example data from [notes.md](../../../notes/2017_November.md) on November 16, 2017
+
+~~2. Simulated data generated from wgsim/dwgsim from samtools toolset.~~
+
+~~3. Real datasets from publicly available data. For example data from [notes.md](../../../notes/2017_November.md) on November 16, 2017~~ 
 
 --
 ### 1.3 Pipeline <a name="1.3.pipeline"></a>
