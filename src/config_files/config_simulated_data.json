@@ -1,0 +1,19 @@
+{
+  "path": {
+      "genomefa": "ref_data/db/",
+      "fastq": "ref_data/samples/",
+      "bamout": "output/mapped_reads/"
+  },
+  "references": {
+      "genomefa": "genome.fa"
+  },
+  "samples": {
+      "normal": "normal",
+      "tumor": "tumor"
+  },
+  "readpair": ["read1", "read2"],
+  "fastq": {
+      "normal": ["normal.bwa.read1", "normal.bwa.read2"],
+      "tumor": ["tumor.bwa.read1", "tumor.bwa.read2"]
+  }
+}
