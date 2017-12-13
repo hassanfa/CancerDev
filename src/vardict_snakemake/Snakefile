@@ -7,40 +7,26 @@
 # coding: utf-8
 
 SAMPLES = ["tumor", "normal"]
+ref_data_prefix = "../../data/snakemake_tutorial_data_131217/"
 
 rule final:
     input:
         "output/calls/tumor_vs_normal.vcf",
 
-rule get_data:
-    output:
-        expand("ref_data/samples/{sample}.fastq", sample=SAMPLES),
-        "ref_data/db/genome.fa"
-    shell:
-        "rm -rf ref_data; "
-        "wget https://bitbucket.org/snakemake/snakemake/downloads/snakemake-tutorial-data.tar.gz; "
-        "tar -xf snakemake-tutorial-data.tar.gz; "
-        "rm requirements.txt; rm snakemake-tutorial-data.tar.gz; "
-        "mv data ref_data; rm ref_data/genome.fa.*; "
-        "mkdir -p ref_data/db; mv ref_data/genome.fa ref_data/db/; "
-        "mv ref_data/samples/A.fastq ref_data/samples/tumor.fastq; "
-        "mv ref_data/samples/B.fastq ref_data/samples/normal.fastq; "
-        "rm ref_data/samples/C.fastq; "
-
 rule ref_genome_index:
     input:
-        fa="ref_data/db/genome.fa"
+        fa=ref_data_prefix + "ref_data/db/genome.fa"
     output:
-        expand("ref_data/db/genome.fa.{prefix}", prefix=["amb","ann","bwt","pac","sa"])
+        expand(ref_data_prefix + "ref_data/db/genome.fa.{prefix}", prefix=["amb","ann","bwt","pac","sa"])
     shell:
         "bwa index {input.fa}; "
         "samtools faidx {input.fa}; "
 
 rule bwa_map:
     input:
-        fa="ref_data/db/genome.fa",
-        fastq="ref_data/samples/{sample}.fastq",
-        refidx=expand("ref_data/db/genome.fa.{prefix}", prefix=["amb","ann","bwt","pac","sa"])
+        fa=ref_data_prefix + "ref_data/db/genome.fa",
+        fastq=ref_data_prefix + "ref_data/samples/{sample}.fastq",
+        refidx=expand(ref_data_prefix + "ref_data/db/genome.fa.{prefix}", prefix=["amb","ann","bwt","pac","sa"])
     output:
         "output/mapped_reads/{sample}.bam"
     log:
@@ -103,7 +89,7 @@ rule vardict_varcall_prepare_bed:
 
 rule vardict_varcall_paired:
     input:
-        fa="ref_data/db/genome.fa",
+        fa=ref_data_prefix + "ref_data/db/genome.fa",
         bamN=expand("output/mapped_reads/{sample}.rmdup.bam", sample=SAMPLES[1]),
         bamT=expand("output/mapped_reads/{sample}.rmdup.bam", sample=SAMPLES[0]),
         bed="output/mapped_reads/merged.bed",
