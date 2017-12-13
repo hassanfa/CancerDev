@@ -7,16 +7,29 @@
 # coding: utf-8
 
 SAMPLES = ["tumor", "normal"]
-ref_data_prefix = "../../data/snakemake_tutorial_data_131217/"
+ref_data_prefix="../../data/snakemake_tutorial_data_131217/"
 
-include:
-  "snakemake_tutorial_data.SnakeFile"
 
 rule final:
     input:
-#        expand(ref_data_prefix + "ref_data/samples/{sample}.fastq", sample=SAMPLES),
-#        ref_data_prefix + "ref_data/db/genome.fa",
-        "output/calls/tumor_vs_normal.vcf",
+        ref_data_prefix + "output/calls/tumor_vs_normal.vcf",
+
+rule get_data:
+    output:
+        expand(ref_data_prefix + "ref_data/samples/{sample}.fastq", sample=SAMPLES),
+        ref_data_prefix + "ref_data/db/genome.fa"
+    shell:
+        "rm -rf {ref_data_prefix}ref_data; "
+        "wget https://bitbucket.org/snakemake/snakemake/downloads/snakemake-tutorial-data.tar.gz; "
+        "tar -xf snakemake-tutorial-data.tar.gz; "
+        "rm requirements.txt; rm snakemake-tutorial-data.tar.gz; "
+        "mv data {ref_data_prefix}ref_data; "
+        "rm {ref_data_prefix}ref_data/genome.fa.*; "
+        "mkdir -p {ref_data_prefix}ref_data/db; "
+        "mv {ref_data_prefix}ref_data/genome.fa ../../data/snakemake_tutorial_data_131217/ref_data/db/; "
+        "mv {ref_data_prefix}ref_data/samples/A.fastq ../../data/snakemake_tutorial_data_131217/ref_data/samples/tumor.fastq; "
+        "mv {ref_data_prefix}ref_data/samples/B.fastq ../../data/snakemake_tutorial_data_131217/ref_data/samples/normal.fastq; "
+        "rm {ref_data_prefix}ref_data/samples/C.fastq; "
 
 rule ref_genome_index:
     input:
@@ -33,28 +46,28 @@ rule bwa_map:
         fastq=ref_data_prefix + "ref_data/samples/{sample}.fastq",
         refidx=expand(ref_data_prefix + "ref_data/db/genome.fa.{prefix}", prefix=["amb","ann","bwt","pac","sa"])
     output:
-        "output/mapped_reads/{sample}.bam"
+        ref_data_prefix + "output/mapped_reads/{sample}.bam"
     log:
-        "output/logs/bwa_mem/{sample}.log"
+        ref_data_prefix + "output/logs/bwa_mem/{sample}.log"
     shell:
         "bwa mem {input.fa} {input.fastq} | samtools view -Sb - > {output} 2> {log}"
 
 rule samtools_sort:
     input:
-        bam="output/mapped_reads/{sample}.bam"
+        bam=ref_data_prefix + "output/mapped_reads/{sample}.bam"
     output:
-        "output/mapped_reads/{sample}.sorted.bam"
+        ref_data_prefix + "output/mapped_reads/{sample}.sorted.bam"
     shell:
-        "samtools sort -T output/mapped_reads/{wildcards.sample} "
+        "samtools sort -T {ref_data_prefix}output/mapped_reads/{wildcards.sample} "
         "-O bam {input.bam} > {output}"
 
 rule remove_duplicate:
     input:
-        bam="output/mapped_reads/{sample}.sorted.bam"
+        bam=ref_data_prefix + "output/mapped_reads/{sample}.sorted.bam"
     output:
-        bam="output/mapped_reads/{sample}.rmdup.bam"
+        bam=ref_data_prefix + "output/mapped_reads/{sample}.rmdup.bam"
     log:
-        stats="output/logs/picard_stats/{sample}.rmdup.bam.txt"
+        stats=ref_data_prefix + "output/logs/picard_stats/{sample}.rmdup.bam.txt"
     shell:
         "picard MarkDuplicates "
         "INPUT={input.bam} "
@@ -66,25 +79,25 @@ rule remove_duplicate:
 
 rule samtools_index:
     input:
-        "output/mapped_reads/{sample}.rmdup.bam"
+        ref_data_prefix + "output/mapped_reads/{sample}.rmdup.bam"
     output:
-        "output/mapped_reads/{sample}.rmdup.bam.bai"
+        ref_data_prefix + "output/mapped_reads/{sample}.rmdup.bam.bai"
     shell:
         "samtools index {input}"
 
 rule samtools_merge:
     input:
-        bam=expand("output/mapped_reads/{sample}.rmdup.bam", sample=SAMPLES)
+        bam=expand(ref_data_prefix + "output/mapped_reads/{sample}.rmdup.bam", sample=SAMPLES)
     output:
-        mergedbam="output/mapped_reads/merged.bam"
+        mergedbam=ref_data_prefix + "output/mapped_reads/merged.bam"
     shell:
         "samtools merge -f {output.mergedbam} {input.bam}"
 
 rule vardict_varcall_prepare_bed:
     input:
-        mergedbam="output/mapped_reads/merged.bam"
+        mergedbam=ref_data_prefix + "output/mapped_reads/merged.bam"
     output:
-        bed="output/mapped_reads/merged.bed"
+        bed=ref_data_prefix + "output/mapped_reads/merged.bed"
     shell:
         "samtools view {input.mergedbam} "
         " | awk -v OFS=\"\\t\" "
@@ -95,12 +108,12 @@ rule vardict_varcall_prepare_bed:
 rule vardict_varcall_paired:
     input:
         fa=ref_data_prefix + "ref_data/db/genome.fa",
-        bamN=expand("output/mapped_reads/{sample}.rmdup.bam", sample=SAMPLES[1]),
-        bamT=expand("output/mapped_reads/{sample}.rmdup.bam", sample=SAMPLES[0]),
-        bed="output/mapped_reads/merged.bed",
-        bai=expand("output/mapped_reads/{sample}.rmdup.bam.bai", sample=SAMPLES)
+        bamN=expand(ref_data_prefix + "output/mapped_reads/{sample}.rmdup.bam", sample=SAMPLES[1]),
+        bamT=expand(ref_data_prefix + "output/mapped_reads/{sample}.rmdup.bam", sample=SAMPLES[0]),
+        bed=ref_data_prefix + "output/mapped_reads/merged.bed",
+        bai=expand(ref_data_prefix + "output/mapped_reads/{sample}.rmdup.bam.bai", sample=SAMPLES)
     output:
-        "output/calls/tumor_vs_normal.vcf"
+        ref_data_prefix + "output/calls/tumor_vs_normal.vcf"
     shell:
         "vardict -G {input.fa} -f 0.01 -N TumorName "
         "-b \"{input.bamT}|{input.bamN}\" "
