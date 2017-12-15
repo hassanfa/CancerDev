@@ -1,8 +1,8 @@
 {
   "path": {
-      "genomefa": "ref_data/db/",
-      "fastq": "ref_data/samples/",
-      "bamout": "output/mapped_reads/"
+      "genomefa": "../../data/simulated_data_131217/ref_data/db/",
+      "fastq": "../../data/simulated_data_131217/ref_data/samples/",
+      "bamout": "../../data/simulated_data_131217/output/mapped_reads/"
   },
   "references": {
       "genomefa": "genome.fa"
