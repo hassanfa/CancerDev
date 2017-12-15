@@ -4,3 +4,5 @@ doc/.ipynb_checkpoints/
 src/vardict_snakemake/output
 src/vardict_snakemake/ref_data
 *tmp*
+src/output
+src/ref_data
