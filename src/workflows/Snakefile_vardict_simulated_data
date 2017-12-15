@@ -21,4 +21,4 @@ include:
 rule all:
   input:
     expand(config["path"]["fastq"] + "{sample}.bwa.{read}_fastqc.zip", sample=config["fastq"], read=config["readpair"]),
-    "output/calls/tumor_vs_normal.vcf"
+    config["path"]["variantcaller"]+config["vcf"]["vardict"]

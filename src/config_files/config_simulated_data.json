@@ -2,7 +2,8 @@
   "path": {
       "genomefa": "../../data/simulated_data_131217/ref_data/db/",
       "fastq": "../../data/simulated_data_131217/ref_data/samples/",
-      "bamout": "../../data/simulated_data_131217/output/mapped_reads/"
+      "bamout": "../../data/simulated_data_131217/output/mapped_reads/",
+      "variantcaller": "../../data/simulated_data_131217/output/calls/"
   },
   "references": {
       "genomefa": "genome.fa"
@@ -15,5 +16,8 @@
   "fastq": {
       "normal": ["normal.bwa.read1", "normal.bwa.read2"],
       "tumor": ["tumor.bwa.read1", "tumor.bwa.read2"]
+  },
+  "vcf": {
+      "vardict": "vcf_vardict.vcf"
   }
 }

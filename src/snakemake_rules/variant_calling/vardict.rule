@@ -12,7 +12,7 @@ rule vardict_varcall_paired:
         bed=config["path"]["bamout"] + "All.merged.bed",
         bai=expand(config["path"]["bamout"] + "{sample}.rmdup.bam.bai", sample=config["samples"])
     output:
-        "output/calls/tumor_vs_normal.vcf"
+        config["path"]["variantcaller"]+config["vcf"]["vardict"]
     shell:
         "vardict-java -G {input.fa} -f 0.01 -N TumorName "
         "-b \"{input.bamT}|{input.bamN}\" "

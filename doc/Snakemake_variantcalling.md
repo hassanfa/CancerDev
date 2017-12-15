@@ -156,7 +156,24 @@ unset DAGTYPE
 Now that we have simulated data ready, running ```snakemake --forceall -p --snakefile Snakefile_vardict_simulated_data``` from within ```src/workflows``` should create the results and a data directory containing the following:
 
 ```
----
+../../data/simulated_data_131217/output/
+├── calls
+│   └── vcf_vardict.vcf
+└── mapped_reads
+    ├── All.merged.bam
+    ├── All.merged.bed
+    ├── normal.bam
+    ├── normal.rmdup.bam
+    ├── normal.rmdup.bam.bai
+    ├── normal.rmdup.bam.txt
+    ├── normal.sorted.bam
+    ├── tumor.bam
+    ├── tumor.rmdup.bam
+    ├── tumor.rmdup.bam.bai
+    ├── tumor.rmdup.bam.txt
+    └── tumor.sorted.bam
+
+2 directories, 13 files
 ```
 
 One important difference with Snakefile for simulated data with tutorial data is the structure of Snakefile, which is based on reusable individual rules which are located within: ```snakemake_rules``` directory:
