@@ -123,7 +123,7 @@
 11. **Delly2**: An integrated structural variant prediction method that can discover, genotype and visualize deletions, tandem duplications, inversions and translocations https://github.com/dellytools/delly
 12. **PLINK**: PLINK: Whole genome data analysis toolset https://www.cog-genomics.org/plink2
 13. **freebayes**: a haplotype-based variant detector. https://github.com/ekg/freebayes
-14. **ASCAT**: Allele-Specific Copy Number Analysis of Tumors https://github.com/Crick-CancerGenomics/ascat
+14. **ASCAT**: Allele-Specific Copy Number Analysis of Tumors, tumor purity and ploidy https://github.com/Crick-CancerGenomics/ascat 
 15. **MutationalPatterns**: R package for extracting and visualizing mutational patterns in base substitution catalogues https://github.com/UMCUGenetics/MutationalPatterns
 16. **desconstructSigs**: identification of mutational signatures within a single tumor sample https://github.com/raerose01/deconstructSigs
 17. **treeOmics**: Decrypting somatic mutation patterns to reveal the evolution of cancer
@@ -160,6 +160,8 @@
 47. **BWA**: BWA is a software package for mapping low-divergent sequences against a large reference genome, such as the human genome. It consists of three algorithms: BWA-backtrack, BWA-SW and BWA-MEM. http://bio-bwa.sourceforge.net/
 48. **wgsim**: Wgsim is a small tool for simulating sequence reads from a reference genome. It is able to simulate diploid genomes with SNPs and insertion/deletion (INDEL) polymorphisms, and simulate reads with uniform substitution sequencing errors. https://github.com/lh3/wgsim
 49. **dwgsim**: Whole genome simulation can be performed with dwgsim. dwgsim is based off of wgsim found in SAMtools. https://github.com/nh13/DWGSIM
+50. **ABSOLUTE**: ABSOLUTE can estimate purity/ploidy, and from that compute absolute copy-number and mutation multiplicities. http://archive.broadinstitute.org/cancer/cga/absolute
+51. **THetA**: Tumor Heterogeneity Analysis. This algorithm estimates tumor purity and clonal/subclonal copy number aberrations directly from high-throughput DNA sequencing data. https://github.com/raphael-group/THetA
 
 
 
