@@ -13,3 +13,4 @@ rule bwa_mem:
     bamout= config["path"]["bamout"]+ "{sample}.bam"
   shell:
     "bwa mem -R \"@RG\tID:foo\tSM:bar\" -M -v 1 {input.fa} {input.fastq} | samtools view -Sb - > {output.bamout}"
+    #"bwa mem -M -v 3 {input.fa} {input.fastq} | samtools view -Sb - > {output.bamout}"
