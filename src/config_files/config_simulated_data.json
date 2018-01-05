@@ -12,10 +12,19 @@
       "normal": "normal",
       "tumor": "tumor"
   },
-  "readpair": ["read1", "read2"],
   "fastq": {
-      "normal": ["normal.bwa.read1", "normal.bwa.read2"],
-      "tumor": ["tumor.bwa.read1", "tumor.bwa.read2"]
+      "normal": {
+        "read1": "normal.bwa.read1.fastq",
+        "read2": "normal.bwa.read2.fastq"
+      },
+      "tumor": {
+        "read1": "tumor.bwa.read1.fastq",
+        "read2": "tumor.bwa.read2.fastq"
+      }
+  },
+  "QC": {
+      "3_p_adapter": "AAAAAAAAAAAAAAAGGGGTGTGTGTGTTGCCCC",
+      "min_seq_length": "25"
   },
   "vcf": {
       "vardict": "vcf_vardict.vcf"
