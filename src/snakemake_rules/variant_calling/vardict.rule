@@ -7,14 +7,14 @@ from os.path import join
 rule vardict_varcall_paired:
     input:
         fa=config["path"]["genomefa"] + config["references"]["genomefa"],
-        bamN=config["path"]["bamout"] + config["samples"]["normal"] + ".rmdup.bam",
-        bamT=config["path"]["bamout"] + config["samples"]["tumor"] + ".rmdup.bam",
+        bamN=config["path"]["bamout"] + config["samples"]["normal"] + ".sorted.rmdup.bam",
+        bamT=config["path"]["bamout"] + config["samples"]["tumor"] + ".sorted.rmdup.bam",
         bed=config["path"]["bamout"] + "All.merged.bed",
-        bai=expand(config["path"]["bamout"] + "{sample}.rmdup.bam.bai", sample=config["samples"])
+        bai=expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bam.bai", sample=config["samples"])
     output:
         config["path"]["variantcaller"]+config["vcf"]["vardict"]
     shell:
-        "vardict-java -G {input.fa} -f 0.01 -N TumorName "
+        "vardict -G {input.fa} -f 0.01 -N TumorName "
         "-b \"{input.bamT}|{input.bamN}\" "
         "-c 1 -S 2 -E 3 -g 4 {input.bed} "
         "| testsomatic.R "

@@ -5,12 +5,12 @@ __author__ = "Hassan Foroughi Asl"
 
 rule remove_duplicate:
     input:
-        config["path"]["bamout"] + "{sample}.sorted.bam"
+        lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".sorted.bam"
     output:
-        rmdup=config["path"]["bamout"] + "{sample}.rmdup.bam",
-        bai=config["path"]["bamout"] + "{sample}.rmdup.bam.bai"
+        rmdup=config["path"]["bamout"] + "{sample}.sorted.rmdup.bam",
+        bai=config["path"]["bamout"] + "{sample}.sorted.rmdup.bam.bai"
     log:
-        stats=config["path"]["bamout"] + "{sample}.rmdup.bam.txt"
+        stats=config["path"]["bamout"] + "{sample}.sorted.rmdup.bam.txt"
     shell:
         "picard MarkDuplicates "
         "INPUT={input} "

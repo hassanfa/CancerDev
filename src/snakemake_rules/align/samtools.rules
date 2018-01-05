@@ -5,7 +5,7 @@ __author__ = "Hassan Foroughi Asl"
 
 rule samtools_sort_index:
     input:
-        config["path"]["bamout"] + "{sample}.bam"
+        lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".bam"
     output:
         config["path"]["bamout"] + "{sample}.sorted.bam"
     shell:
@@ -13,7 +13,7 @@ rule samtools_sort_index:
 
 rule samtools_merge:
     input:
-      expand(config["path"]["bamout"] + "{sample}.rmdup.bam", sample=config["samples"]) 
+      expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bam", sample=config["samples"]) 
     output:
       config["path"]["bamout"] + "All.merged.bam"
     shell:
