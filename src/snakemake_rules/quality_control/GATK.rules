@@ -18,7 +18,8 @@ rule GATK_baserecalibrator:
 rule GATK_printheads:
   input:
     fa=config["path"]["genomefa"] + config["references"]["genomefa"],
-    bam=lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".sorted.rmdup.bsrcl",
+    bsrcl=lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".sorted.rmdup.bsrcl",
+    bam=lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".sorted.rmdup.bam",
   output:
     config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl.bam",
   shell:
