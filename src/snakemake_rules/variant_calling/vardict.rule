@@ -7,10 +7,10 @@ from os.path import join
 rule vardict_varcall_paired:
     input:
         fa=config["path"]["genomefa"] + config["references"]["genomefa"],
-        bamN=config["path"]["bamout"] + config["samples"]["normal"] + ".sorted.rmdup.bam",
-        bamT=config["path"]["bamout"] + config["samples"]["tumor"] + ".sorted.rmdup.bam",
+        bamN=config["path"]["bamout"] + config["samples"]["normal"] + ".sorted.rmdup.bsrcl.bam",
+        bamT=config["path"]["bamout"] + config["samples"]["tumor"] + ".sorted.rmdup.bsrcl.bam",
         bed=config["path"]["bamout"] + "All.merged.bed",
-        bai=expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bam.bai", sample=config["samples"])
+        #bai=expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl.bam.bai", sample=config["samples"])
     output:
         config["path"]["variantcaller"]+config["vcf"]["vardict"]
     shell:

@@ -13,7 +13,7 @@ rule samtools_sort_index:
 
 rule samtools_merge:
     input:
-      expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bam", sample=config["samples"]) 
+      expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl.bam", sample=config["samples"]) 
     output:
       config["path"]["bamout"] + "All.merged.bam"
     shell:

@@ -27,4 +27,5 @@ rule GATK_printreads:
     "--reference {input.fa} "
     "-BQSR {input.bsrcl} "
     "-I {input.bam} "
-    "--output {output}"
+    "--output {output}; "
+    "samtools index {input.bam}; "
