@@ -15,7 +15,7 @@ rule GATK_baserecalibrator:
         "-knownSites ../../data/simulated_data_131217/ref_data/samples/tumor.mutations.vcf "
         "-I {input.bam} --output {output}"
 
-rule GATK_printheads:
+rule GATK_printreads:
   input:
     fa=config["path"]["genomefa"] + config["references"]["genomefa"],
     bsrcl=lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".sorted.rmdup.bsrcl",
