@@ -20,6 +20,10 @@ include:
   rule_dir + "snakemake_rules/quality_control/remove_duplicate.rule"
 include:
   rule_dir + "snakemake_rules/variant_calling/vardict.rule"
+include:
+  rule_dir + "snakemake_rules/quality_control/sambamba_depth.rule"
+include:
+  rule_dir + "snakemake_rules/quality_control/GATK_baserecalib.rules"
 
 
 rule all:
@@ -32,6 +36,8 @@ rule all:
     expand(config["path"]["bamout"] + "{sample}.sorted.bam", sample=config["samples"]),
     expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bam", sample=config["samples"]),
     config["path"]["bamout"] + "All.merged.bed",
+    expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.cov.bed", sample=config["samples"]),
+    expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl", sample=config["samples"]),
     config["path"]["variantcaller"]+config["vcf"]["vardict"],
     expand(config["path"]["bamout"] + "{sample}.bam", sample=config["fastq"])
 
