@@ -8,7 +8,10 @@ rule ref_genome_index:
   input:
     fa=config["path"]["genomefa"]+config["references"]["genomefa"],
   output:
-    expand(config["path"]["genomefa"]+config["references"]["genomefa"]+".{prefix}", prefix=["amb","ann","bwt","pac","sa"])
+    idx=expand(config["path"]["genomefa"]+config["references"]["genomefa"]+".{prefix}", prefix=["amb","ann","bwt","pac","sa"]),
+    dict=config["path"]["genomefa"]+"genome.dict"
   shell:
     "bwa index {input.fa}; "
     "samtools faidx {input.fa}; "
+    "gatk-launch CreateSequenceDictionary -R {input.fa} -O {output.dict}; " 
+    "gatk-launch IndexFeatureFile --feature_file ../../data/simulated_data_131217/ref_data/samples/tumor.mutations.vcf; "
