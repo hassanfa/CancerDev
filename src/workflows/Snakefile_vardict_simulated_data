@@ -23,7 +23,7 @@ include:
 include:
   rule_dir + "snakemake_rules/quality_control/sambamba_depth.rule"
 include:
-  rule_dir + "snakemake_rules/quality_control/GATK_baserecalib.rules"
+  rule_dir + "snakemake_rules/quality_control/GATK.rules"
 
 
 rule all:
@@ -37,6 +37,7 @@ rule all:
     expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bam", sample=config["samples"]),
     config["path"]["bamout"] + "All.merged.bed",
     expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.cov.bed", sample=config["samples"]),
+    expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl.bam", sample=config["samples"]),
     expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl", sample=config["samples"]),
     config["path"]["variantcaller"]+config["vcf"]["vardict"],
     expand(config["path"]["bamout"] + "{sample}.bam", sample=config["fastq"])
