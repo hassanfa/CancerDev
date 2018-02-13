@@ -7,8 +7,8 @@ __author__ = "Hassan Foroughi Asl"
 rule bwa_mem:
   input:
     fa=config["path"]["genomefa"] + config["references"]["genomefa"],
-    read1=lambda wildcards: (config["path"]["fastq"] + config["fastq"][wildcards.sample]["read1"]).replace("fastq","ca.fastq"),
-    read2=lambda wildcards: (config["path"]["fastq"] + config["fastq"][wildcards.sample]["read2"]).replace("fastq","ca.fastq"),
+    read1=lambda wildcards: config["path"]["fastq"] + (config["fastq"][wildcards.sample]["read1"]).replace("fastq","ca.fastq"),
+    read2=lambda wildcards: config["path"]["fastq"] + (config["fastq"][wildcards.sample]["read2"]).replace("fastq","ca.fastq"),
     refidx=expand(config["path"]["genomefa"] + config["references"]["genomefa"] + ".{prefix}", prefix=["amb","ann","bwt","pac","sa"])
   output:
     bamout=config["path"]["bamout"] + "{sample}.bam"

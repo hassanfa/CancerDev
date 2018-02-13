@@ -44,6 +44,10 @@
 24. **VarSome**: VarSome is a knowledge base and aggregator for human genomic variants. https://varsome.com/about/
 25. **Google Genomics Public Data**: Google Genomics helps the life science community organize the world’s genomic information and make it accessible and useful. and http://googlegenomics.readthedocs.io
 
+#### Sample datasets:
+
+1. **TCRB**: he Texas Cancer Research Biobank (TCRB) was created to bridge the gap between doctors and scientific researchers to improve the prevention, diagnosis and treatment of cancer. This work occurred with funding from the Cancer Prevention & Research Institute of Texas (CPRIT) from 2010-2014. http://txcrb.org/data.html Article: https://www.nature.com/articles/sdata201610
+
 ## Publications <a name="papers"></a>
 
 ### Pipelines, and reviews <a name="mainpapers"></a>
@@ -162,11 +166,6 @@
 49. **dwgsim**: Whole genome simulation can be performed with dwgsim. dwgsim is based off of wgsim found in SAMtools. https://github.com/nh13/DWGSIM
 50. **ABSOLUTE**: ABSOLUTE can estimate purity/ploidy, and from that compute absolute copy-number and mutation multiplicities. http://archive.broadinstitute.org/cancer/cga/absolute
 51. **THetA**: Tumor Heterogeneity Analysis. This algorithm estimates tumor purity and clonal/subclonal copy number aberrations directly from high-throughput DNA sequencing data. https://github.com/raphael-group/THetA
-
-
-
-
-
-
-
-
+52. **Skewer**: Adapter trimming, similar to cutadapt. https://github.com/relipmoc/skewer
+53. **Phylowgs**: Application for inferring subclonal composition and evolution from whole-genome sequencing data. https://github.com/morrislab/phylowgs
+54. **superFreq**: SuperFreq is an R package that analyses cancer exomes to track subclones. https://github.com/ChristofferFlensburg/superFreq
