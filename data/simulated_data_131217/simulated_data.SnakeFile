@@ -14,7 +14,8 @@ rule prepare_genome:
   output:
     "ref_data/db/genome.fa"
   shell:
-    "samtools faidx {input.fa} chr22:15500000-15505000 | sed 's/>chr22:15500000-15505000/>chr22/g' > {output}; "
+    "samtools faidx {input.fa} chr22:15500000-16500000 chr21:15500000-16500000 "
+    "| sed 's/>chr22:15500000-16500000/>chr22/g' | sed 's/>chr21:15500000-16500000/>chr21/g'> {output}; "
     "samtools faidx {output}; "
 
 rule simulate_reads:
@@ -24,7 +25,7 @@ rule simulate_reads:
     expand("ref_data/samples/normal.{suffix}",suffix=["bwa.read2.fastq", "bwa.read1.fastq"]),
     expand("ref_data/samples/tumor.{suffix}",suffix=["bwa.read2.fastq", "bwa.read1.fastq"]),
   params:
-    Coverage="200",
+    Coverage="10",
     MutationRate="0.1",
     readLength="100"
   shell:
@@ -38,4 +39,3 @@ rule simulate_reads:
     "-r {params.MutationRate} -F 0.5 -R 0.1 -X 0.3 "
     "-I 1 -y 0 -n 0 -c 0 -S 2 -z 123456 "
     "{input} tumor; mv tumor* ref_data/samples/; "
-
