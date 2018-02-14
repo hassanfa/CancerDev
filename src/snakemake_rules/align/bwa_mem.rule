@@ -13,7 +13,7 @@ rule bwa_mem:
   output:
     bamout=config["path"]["bamout"] + "{sample}.bam"
   params:
-    header_1="'@RG\tID:foo\tSM:bar\tPL:ILLUMINAi'"
+    header_1="'@RG\tID:foo\tSM:" + "{sample}" + "\tPL:ILLUMINAi'"
   run:
     shell("bwa mem -R  {params.header_1} -M -v 1 {input.fa} {input.read1} {input.read2} | samtools view -Sb - > {output.bamout}")
 

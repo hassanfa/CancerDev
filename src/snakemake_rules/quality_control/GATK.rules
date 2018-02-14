@@ -25,7 +25,7 @@ rule GATK_printreads:
   shell:
     "gatk-launch PrintReads "
     "--reference {input.fa} "
-    "-BQSR {input.bsrcl} "
     "-I {input.bam} "
     "--output {output}; "
     "samtools index {input.bam}; "
+    #"-BQSR {input.bsrcl} "
