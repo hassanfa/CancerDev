@@ -5,11 +5,19 @@ __author__ = "Hassan Foroughi Asl"
 from os.path import join
 
 rule strelka_prepare_config:
-    input:
-        config["path"]["condaenv"] + "strelka.yaml"
-    output:
-        config["path"]["variantcaller"]+config["vcf"]["strelka"]
-    conda:
-        config["path"]["condaenv"] + "strelka.yaml"
-    shell:
-        "configureStrelkaSomaticWorkflow.py --help &> {output}"
+  input:
+    fa=config["path"]["genomefa"] + config["references"]["genomefa"],
+    bamN=config["path"]["bamout"] + config["samples"]["normal"] + ".sorted.rmdup.bsrcl.bam",
+    bamT=config["path"]["bamout"] + config["samples"]["tumor"] + ".sorted.rmdup.bsrcl.bam",
+  output:
+    config["path"]["variantcaller"]+config["vcf"]["strelka"]
+  conda:
+    config["path"]["condaenv"] + "strelka.yaml"
+  params:
+    tmpdir=config["path"]["variantcaller"] + "strelka_tmp",
+    runmode="local"
+  shell:
+    "configureStrelkaSomaticWorkflow.py --normalBam={input.bamN} --tumorBam={input.bamT} "
+    "--referenceFasta={input.fa} --outputCallableRegions --runDir={params.tmpdir}; "
+    "python {params.tmpdir}/runWorkflow.py -m {params.runmode};"
+    "mv {params.tmpdir}/results/variants/somatic.indels.vcf.gz {output}.gz; gunzip {output}.gz"

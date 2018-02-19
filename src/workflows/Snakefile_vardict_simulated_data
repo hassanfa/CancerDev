@@ -43,5 +43,5 @@ rule all:
     #expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.cov.bed", sample=config["samples"]),
     #expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl.bam", sample=config["samples"]),
     #expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl", sample=config["samples"]),
-    config["path"]["variantcaller"]+config["vcf"]["vardict"],
+    #config["path"]["variantcaller"]+config["vcf"]["vardict"],
 
