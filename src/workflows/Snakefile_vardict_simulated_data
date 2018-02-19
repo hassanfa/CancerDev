@@ -7,6 +7,8 @@ configfile: "../config_files/config_simulated_data.json"
 rule_dir = "../"
 
 include:
+  rule_dir + "snakemake_rules/variant_calling/strelka.rule"
+include:
   rule_dir + "snakemake_rules/ref_prepare/genome_fa.rule"
 include:
   rule_dir + "snakemake_rules/quality_control/fastqc.rule"
@@ -28,6 +30,7 @@ include:
 
 rule all:
   input:
+    config["path"]["variantcaller"]+config["vcf"]["strelka"],
     #expand(config["path"]["genomefa"]+config["references"]["genomefa"]+".{prefix}", prefix=["amb","ann","bwt","pac","sa"]),
     #expand(config["path"]["fastq"] + "{sample}.bwa.read1.ca.fastq", sample=config["fastq"]),
     #expand(config["path"]["fastq"] + "{sample}.bwa.read2.ca.fastq", sample=config["fastq"]),
@@ -36,7 +39,7 @@ rule all:
     #expand(config["path"]["bamout"] + "{sample}.bam", sample=config["fastq"]),
     #expand(config["path"]["bamout"] + "{sample}.sorted.bam", sample=config["samples"]),
     #expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bam", sample=config["samples"]),
-    config["path"]["bamout"] + "All.merged.bed",
+    #config["path"]["bamout"] + "All.merged.bed",
     #expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.cov.bed", sample=config["samples"]),
     #expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl.bam", sample=config["samples"]),
     #expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl", sample=config["samples"]),

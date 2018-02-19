@@ -11,6 +11,8 @@ rule fastqc:
   output:
     read1=config["path"]["fastq"] +"{sample}.bwa.read1_fastqc.zip",
     read2=config["path"]["fastq"] +"{sample}.bwa.read2_fastqc.zip",
+  conda:
+    config["path"]["condaenv"] + "core.yaml"
   shell:
     "fastqc {input.read1};" 
     "fastqc {input.read2};"

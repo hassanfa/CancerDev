@@ -1,9 +1,10 @@
 {
   "path": {
-      "genomefa": "../../data/simulated_data_131217/ref_data/db/",
-      "fastq": "../../data/simulated_data_131217/ref_data/samples/",
-      "bamout": "../../data/simulated_data_131217/output/mapped_reads/",
-      "variantcaller": "../../data/simulated_data_131217/output/calls/"
+      "genomefa": "/home/hassan.foroughi/repo/CancerDev/data/simulated_data_131217/ref_data/db/",
+      "fastq": "/home/hassan.foroughi/repo/CancerDev/data/simulated_data_131217/ref_data/samples/",
+      "bamout": "/home/hassan.foroughi/repo/CancerDev/data/simulated_data_131217/output/mapped_reads/",
+      "variantcaller": "/home/hassan.foroughi/repo/CancerDev/data/simulated_data_131217/output/calls/",
+      "condaenv": "/home/hassan.foroughi/repo/CancerDev/condaenv/"
   },
   "references": {
       "genomefa": "genome.fa"
@@ -27,6 +28,7 @@
       "min_seq_length": "25"
   },
   "vcf": {
+      "strelka": "vcf_strelka.vcf",
       "vardict": "vcf_vardict.vcf"
   }
 }

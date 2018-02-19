@@ -4,20 +4,22 @@
 __author__ = "Hassan Foroughi Asl"
 
 rule remove_duplicate:
-    input:
-        lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".sorted.bam"
-    output:
-        rmdup=config["path"]["bamout"] + "{sample}.sorted.rmdup.bam",
-        bai=config["path"]["bamout"] + "{sample}.sorted.rmdup.bam.bai"
-    log:
-        stats=config["path"]["bamout"] + "{sample}.sorted.rmdup.bam.txt"
-    shell:
-        "picard MarkDuplicates "
-        "INPUT={input} "
-        "OUTPUT={output.rmdup} "
-        "VALIDATION_STRINGENCY=SILENT "
-        "MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1000 "
-        "REMOVE_DUPLICATES=TRUE "
-        "METRICS_FILE='{log.stats}'; "
-        "samtools index {output.rmdup}; "
+  input:
+      lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".sorted.bam"
+  output:
+      rmdup=config["path"]["bamout"] + "{sample}.sorted.rmdup.bam",
+      bai=config["path"]["bamout"] + "{sample}.sorted.rmdup.bam.bai"
+  log:
+      stats=config["path"]["bamout"] + "{sample}.sorted.rmdup.bam.txt"
+  conda:
+    config["path"]["condaenv"] + "core_python36.yaml"
+  shell:
+      "picard MarkDuplicates "
+      "INPUT={input} "
+      "OUTPUT={output.rmdup} "
+      "VALIDATION_STRINGENCY=SILENT "
+      "MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1000 "
+      "REMOVE_DUPLICATES=TRUE "
+      "METRICS_FILE='{log.stats}'; "
+      "samtools index {output.rmdup}; "
 

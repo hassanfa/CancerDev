@@ -4,29 +4,35 @@
 __author__ = "Hassan Foroughi Asl"
 
 rule samtools_sort_index:
-    input:
-        lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".bam"
-    output:
-        config["path"]["bamout"] + "{sample}.sorted.bam"
-    shell:
-        "samtools sort -o {output} {input}"
+  input:
+      lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".bam"
+  output:
+      config["path"]["bamout"] + "{sample}.sorted.bam"
+  conda:
+      config["path"]["condaenv"] + "core.yaml"
+  shell:
+      "samtools sort -o {output} {input}"
 
 rule samtools_merge:
-    input:
-      expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl.bam", sample=config["samples"]) 
-    output:
-      config["path"]["bamout"] + "All.merged.bam"
-    shell:
-      "samtools merge -f {output} {input};"
+  input:
+    expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl.bam", sample=config["samples"]) 
+  output:
+    config["path"]["bamout"] + "All.merged.bam"
+  conda:
+    config["path"]["condaenv"] + "core.yaml"
+  shell:
+    "samtools merge -f {output} {input};"
 
 rule samtools_bed_from_bam:
-    input:
-        config["path"]["bamout"] + "All.merged.bam"
-    output:
-        config["path"]["bamout"] + "All.merged.bed"
-    shell:
-        "samtools view {input} "
-        " | awk -v OFS=\"\\t\" "
-        "'$3~/chr/ {{if (c[$3]==0) {{c[$3]=1; min[$3]=$4; max[$3]=$4;}} "
-        "if (min[$3]>$4) min[$3]=$4; if (max[$3]<$4) max[$3]=$4}}"
-        "END{{for (x in min) print x,min[x],max[x]}}' > {output}"
+  input:
+      config["path"]["bamout"] + "All.merged.bam"
+  output:
+      config["path"]["bamout"] + "All.merged.bed"
+  conda:
+    config["path"]["condaenv"] + "core.yaml"
+  shell:
+      "samtools view {input} "
+      " | awk -v OFS=\"\\t\" "
+      "'$3~/chr/ {{if (c[$3]==0) {{c[$3]=1; min[$3]=$4; max[$3]=$4;}} "
+      "if (min[$3]>$4) min[$3]=$4; if (max[$3]<$4) max[$3]=$4}}"
+      "END{{for (x in min) print x,min[x],max[x]}}' > {output}"

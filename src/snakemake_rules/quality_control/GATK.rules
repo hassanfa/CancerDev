@@ -4,16 +4,18 @@
 __author__ = "Hassan Foroughi Asl"
 
 rule GATK_baserecalibrator:
-    input:
-        bam=lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".sorted.rmdup.bam",
-        fa=config["path"]["genomefa"] + config["references"]["genomefa"],
-    output:
-        config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl",
-    shell:
-        "gatk-launch BaseRecalibrator "
-        "--reference {input.fa} "
-        "-knownSites ../../data/simulated_data_131217/ref_data/samples/tumor.mutations.vcf "
-        "-I {input.bam} --output {output}"
+  input:
+      bam=lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".sorted.rmdup.bam",
+      fa=config["path"]["genomefa"] + config["references"]["genomefa"],
+  output:
+      config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl",
+  conda:
+    config["path"]["condaenv"] + "core_python36.yaml"
+  shell:
+      "gatk-launch BaseRecalibrator "
+      "--reference {input.fa} "
+      "--known-sites ../../data/simulated_data_131217/ref_data/samples/tumor.mutations.vcf "
+      "-I {input.bam} --output {output}"
 
 rule GATK_printreads:
   input:
@@ -22,10 +24,11 @@ rule GATK_printreads:
     bam=lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".sorted.rmdup.bam",
   output:
     config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl.bam",
+  conda:
+    config["path"]["condaenv"] + "core_python36.yaml"
   shell:
     "gatk-launch PrintReads "
     "--reference {input.fa} "
     "-I {input.bam} "
     "--output {output}; "
     "samtools index {input.bam}; "
-    #"-BQSR {input.bsrcl} "

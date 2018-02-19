@@ -14,6 +14,7 @@ rule bwa_mem:
     bamout=config["path"]["bamout"] + "{sample}.bam"
   params:
     header_1="'@RG\tID:foo\tSM:" + "{sample}" + "\tPL:ILLUMINAi'"
-  run:
-    shell("bwa mem -R  {params.header_1} -M -v 1 {input.fa} {input.read1} {input.read2} | samtools view -Sb - > {output.bamout}")
-
+  conda:
+    config["path"]["condaenv"] + "core.yaml"
+  shell:
+    "bwa mem -R  {params.header_1} -M -v 1 {input.fa} {input.read1} {input.read2} | samtools view -Sb - > {output.bamout}"

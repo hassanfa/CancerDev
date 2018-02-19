@@ -1,0 +1,22 @@
+# vim: syntax=python tabstop=4 expandtab
+# coding: utf-8
+
+__author__ = "Hassan Foroughi Asl"
+from os.path import join
+
+rule vardict_varcall_paired:
+    input:
+        fa=config["path"]["genomefa"] + config["references"]["genomefa"],
+        bamN=config["path"]["bamout"] + config["samples"]["normal"] + ".sorted.rmdup.bsrcl.bam",
+        bamT=config["path"]["bamout"] + config["samples"]["tumor"] + ".sorted.rmdup.bsrcl.bam",
+        bed=config["path"]["bamout"] + "All.merged.bed",
+        #bai=expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl.bam.bai", sample=config["samples"])
+    output:
+        config["path"]["variantcaller"]+config["vcf"]["vardict"]
+    shell:
+        "vardict -G {input.fa} -f 0.01 -N TumorName "
+        "-b \"{input.bamT}|{input.bamN}\" "
+        "-c 1 -S 2 -E 3 -g 4 {input.bed} "
+        "| testsomatic.R "
+        "| var2vcf_paired.pl -N \"TumorName|NormalName\" -f 0.01 "
+        "> {output}"

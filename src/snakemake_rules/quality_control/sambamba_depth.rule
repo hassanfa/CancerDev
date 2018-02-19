@@ -4,23 +4,25 @@
 __author__ = "Hassan Foroughi Asl"
 
 rule sambamba_depth:
-    input:
-        bam=lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".sorted.rmdup.bam",
-        bed=config["path"]["bamout"] + "All.merged.bed"
-    output:
-        config["path"]["bamout"] + "{sample}.sorted.rmdup.cov.bed"
-    params:
-        base_qual=10,
-        filter_string="'mapping_quality >= 10 and not duplicate and not failed_quality_control'",
-        cov_1="100",
-        cov_2="200",
-        cov_3="300",
-        cov_4="400",
-        cov_5="500",
-    shell:
-        "sambamba depth region --regions {input.bed} "
-        "--min-base-quality {params.base_qual} "
-        "--filter {params.filter_string} "
-        "--cov-threshold {params.cov_1} --cov-threshold {params.cov_2} "
-        "--cov-threshold {params.cov_3} --cov-threshold {params.cov_4} "
-        "--cov-threshold {params.cov_4} {input.bam} > {output}"
+  input:
+      bam=lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".sorted.rmdup.bam",
+      bed=config["path"]["bamout"] + "All.merged.bed"
+  output:
+      config["path"]["bamout"] + "{sample}.sorted.rmdup.cov.bed"
+  params:
+      base_qual=10,
+      filter_string="'mapping_quality >= 10 and not duplicate and not failed_quality_control'",
+      cov_1="100",
+      cov_2="200",
+      cov_3="300",
+      cov_4="400",
+      cov_5="500",
+  conda:
+    config["path"]["condaenv"] + "core.yaml"
+  shell:
+      "sambamba depth region --regions {input.bed} "
+      "--min-base-quality {params.base_qual} "
+      "--filter {params.filter_string} "
+      "--cov-threshold {params.cov_1} --cov-threshold {params.cov_2} "
+      "--cov-threshold {params.cov_3} --cov-threshold {params.cov_4} "
+      "--cov-threshold {params.cov_4} {input.bam} > {output}"
