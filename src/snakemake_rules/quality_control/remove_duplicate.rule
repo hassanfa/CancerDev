@@ -3,23 +3,27 @@
 
 __author__ = "Hassan Foroughi Asl"
 
-rule remove_duplicate:
+bam_dir = config["analysis"]["analysis_dir"] + "/" + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "/" + "bam/"
+
+rule picard_remove_duplicate:
   input:
-      lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".sorted.bam"
+    lambda wildcard: bam_dir + config["samples"][wildcard.sample] + ".sorted.bam"
   output:
-      rmdup=config["path"]["bamout"] + "{sample}.sorted.rmdup.bam",
-      bai=config["path"]["bamout"] + "{sample}.sorted.rmdup.bam.bai"
+    rmdup = bam_dir + "{sample}.sorted.rmdup.bam",
+    bai = bam_dir + "{sample}.sorted.rmdup.bam.bai"
   log:
-      stats=config["path"]["bamout"] + "{sample}.sorted.rmdup.bam.txt"
-  conda:
-    config["path"]["condaenv"] + "core_python36.yaml"
+    stats = bam_dir + "{sample}.sorted.rmdup.bam.txt"
+  params:
+    conda = config["condaenvs"]["cancer_core_addition_python36"],
   shell:
-      "picard MarkDuplicates "
-      "INPUT={input} "
-      "OUTPUT={output.rmdup} "
-      "VALIDATION_STRINGENCY=SILENT "
-      "MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1000 "
-      "REMOVE_DUPLICATES=TRUE "
-      "METRICS_FILE='{log.stats}'; "
-      "samtools index {output.rmdup}; "
+    "source activate {params.conda};"
+    "picard MarkDuplicates "
+        "INPUT={input} "
+        "OUTPUT={output.rmdup} "
+        "VALIDATION_STRINGENCY=SILENT "
+        "MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1000 "
+        "REMOVE_DUPLICATES=TRUE "
+        "METRICS_FILE='{log.stats}'; "
+    "samtools index {output.rmdup}; "
+    "source deactivate; "
 

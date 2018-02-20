@@ -9,8 +9,7 @@ rule vardict_varcall_paired:
     fa=config["path"]["genomefa"] + config["references"]["genomefa"],
     bamN=config["path"]["bamout"] + config["samples"]["normal"] + ".sorted.rmdup.bsrcl.bam",
     bamT=config["path"]["bamout"] + config["samples"]["tumor"] + ".sorted.rmdup.bsrcl.bam",
-    bed=config["path"]["bamout"] + "All.merged.bed",
-    #bai=expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl.bam.bai", sample=config["samples"])
+    bed=config["path"]["bamout"] + config["bed"]["variant_panel"],
   output:
     config["path"]["variantcaller"]+config["vcf"]["vardict"]
   params:
@@ -18,7 +17,8 @@ rule vardict_varcall_paired:
     max_pval="0.9",
     max_mm="4.5",
     col_info="-c 1 -S 2 -E 3 -g 4",
-    name="TestSample"
+    name="TestSample",
+    conda=config["condaenvs"]["cancer_core"]
   shell:
     "vardict -G {input.fa} -f {params.af} -N {params.name} "
     "-b \"{input.bamT}|{input.bamN}\" "

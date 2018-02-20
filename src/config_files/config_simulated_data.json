@@ -1,17 +1,28 @@
 {
+  "analysis":{
+      "sample_id": "patient_0",
+      "analysis_type": "paired",
+      "analysis_dir": "/home/hassan.foroughi/repo/CancerDev/data/simulated_data_131217",
+      "script": "scripts",
+      "log":  "logs",
+      "result": "results"
+  },
   "path": {
       "genomefa": "/home/hassan.foroughi/repo/CancerDev/data/simulated_data_131217/ref_data/db/",
       "fastq": "/home/hassan.foroughi/repo/CancerDev/data/simulated_data_131217/ref_data/samples/",
-      "bamout": "/home/hassan.foroughi/repo/CancerDev/data/simulated_data_131217/output/mapped_reads/",
-      "variantcaller": "/home/hassan.foroughi/repo/CancerDev/data/simulated_data_131217/output/calls/",
+      "panel": "/home/hassan.foroughi/repo/CancerDev/data/simulated_data_131217/ref_data/panel/",
       "condaenv": "/home/hassan.foroughi/repo/CancerDev/condaenv/"
   },
   "references": {
-      "genomefa": "genome.fa"
+      "genomefa": "genome.fa",
+      "knownsite_vcf": "tumor.mutations.vcf"
   },
   "samples": {
       "normal": "normal",
       "tumor": "tumor"
+  },
+  "bed": {
+      "variant_panel": "panel.bed",
   },
   "fastq": {
       "normal": {
@@ -29,6 +40,12 @@
   },
   "vcf": {
       "strelka": "vcf_strelka.vcf",
+      "manta": "vcf_manta.vcf",
       "vardict": "vcf_vardict.vcf"
+  },
+  "condaenvs": {
+      "cancer_core_addition_python27": "cancer_core_addition_python27",
+      "cancer_core_addition_python36": "cancer_core_addition_python36",
+      "cancer_core": "cancer_core"
   }
 }

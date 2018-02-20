@@ -6,42 +6,52 @@ configfile: "../config_files/config_simulated_data.json"
 
 rule_dir = "../"
 
-include:
-  rule_dir + "snakemake_rules/variant_calling/strelka.rule"
-include:
-  rule_dir + "snakemake_rules/ref_prepare/genome_fa.rule"
-include:
-  rule_dir + "snakemake_rules/quality_control/fastqc.rule"
-include:
-  rule_dir + "snakemake_rules/quality_control/cutadapt.rule"
+#include:
+#  rule_dir + "snakemake_rules/ref_prepare/genome_fa.rule"
+#include:
+#  rule_dir + "snakemake_rules/variant_calling/vardict.rule"
+
 include:
   rule_dir + "snakemake_rules/align/bwa_mem.rule"
 include:
-  rule_dir + "snakemake_rules/align/samtools.rules"
+  rule_dir + "snakemake_rules/quality_control/cutadapt.rule"
+include:
+  rule_dir + "snakemake_rules/quality_control/fastqc.rule"
+include:
+  rule_dir + "snakemake_rules/quality_control/GATK.rules"
+include:
+  rule_dir + "snakemake_rules/variant_calling/manta.rule"
 include:
   rule_dir + "snakemake_rules/quality_control/remove_duplicate.rule"
 include:
-  rule_dir + "snakemake_rules/variant_calling/vardict.rule"
-include:
   rule_dir + "snakemake_rules/quality_control/sambamba_depth.rule"
 include:
-  rule_dir + "snakemake_rules/quality_control/GATK.rules"
+  rule_dir + "snakemake_rules/variant_calling/strelka.rule"
+include:
+  rule_dir + "snakemake_rules/align/samtools.rules"
 
+
+cutadapt_dir = config["analysis"]["analysis_dir"] + "/" + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "/" + "cutadapt/"
+fastqc_dir = config["analysis"]["analysis_dir"] + "/" + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "/" + "fastqc/"
+bam_dir = config["analysis"]["analysis_dir"] + "/" + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "/" + "bam/"
+vcf_dir = config["analysis"]["analysis_dir"] + "/" + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "/" + "vcf/"
+manta_dir = "manta/"
+strelka_dir = "strelka/"
 
 rule all:
   input:
-    config["path"]["variantcaller"]+config["vcf"]["strelka"],
-    #expand(config["path"]["genomefa"]+config["references"]["genomefa"]+".{prefix}", prefix=["amb","ann","bwt","pac","sa"]),
-    #expand(config["path"]["fastq"] + "{sample}.bwa.read1.ca.fastq", sample=config["fastq"]),
-    #expand(config["path"]["fastq"] + "{sample}.bwa.read2.ca.fastq", sample=config["fastq"]),
-    expand(config["path"]["fastq"] + "{sample}.bwa.read1_fastqc.zip", sample=config["fastq"]),
-    expand(config["path"]["fastq"] + "{sample}.bwa.read2_fastqc.zip", sample=config["fastq"]),
-    #expand(config["path"]["bamout"] + "{sample}.bam", sample=config["fastq"]),
-    #expand(config["path"]["bamout"] + "{sample}.sorted.bam", sample=config["samples"]),
-    #expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bam", sample=config["samples"]),
-    #config["path"]["bamout"] + "All.merged.bed",
-    #expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.cov.bed", sample=config["samples"]),
-    #expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl.bam", sample=config["samples"]),
-    #expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl", sample=config["samples"]),
+    vcf_dir + manta_dir + config["vcf"]["manta"],
+    vcf_dir + strelka_dir + config["vcf"]["strelka"],
+    #config["path"]["variantcaller"]+config["vcf"]["strelka"],
     #config["path"]["variantcaller"]+config["vcf"]["vardict"],
+    expand(cutadapt_dir + "{sample}.bwa.read1.ca.fastq", sample=config["fastq"]),
+    expand(cutadapt_dir + "{sample}.bwa.read2.ca.fastq", sample=config["fastq"]),
+    expand(fastqc_dir + "{sample}.bwa.read1_fastqc.zip", sample=config["fastq"]),
+    expand(fastqc_dir + "{sample}.bwa.read2_fastqc.zip", sample=config["fastq"]),
+    expand(bam_dir + "{sample}.bam", sample=config["fastq"]),
+    expand(bam_dir + "{sample}.sorted.bam", sample=config["samples"]),
+    expand(bam_dir + "{sample}.sorted.rmdup.bam", sample=config["samples"]),
+    expand(bam_dir + "{sample}.sorted.rmdup.cov.bed", sample=config["samples"]),
+    expand(bam_dir + "{sample}.sorted.rmdup.bsrcl", sample=config["samples"]),
+    expand(bam_dir + "{sample}.sorted.rmdup.bsrcl.bam", sample=config["samples"]),
 

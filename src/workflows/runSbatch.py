@@ -30,7 +30,6 @@ print(args)
 config = args.config
 jobscript = args.snakescript
 job_properties = read_job_properties(jobscript)
-#print(job_properties)
 # access property defined in the cluster configuration file (Snakemake >=3.6.0), cluster.json
 time = job_properties["cluster"]["time"]
 cpu = job_properties["cluster"]["n"]
@@ -58,12 +57,12 @@ cmdline += " "
 cmdline += scriptpath + scriptname
 
 cmdline += " | cut -d' ' -f 4"
-
-f = open('helloworld.txt','a')
 logpath='/home/hassan.foroughi/repo/CancerDev/src/workflows/logs/'
-f.write(cmdline + "\n")
 os.system('ln -sf ' + output_log + ' ' + logpath) 
 os.system('ln -sf ' + error_log + ' ' + logpath) 
+
+f = open('helloworld.txt','a')
+f.write("cancer." + job_properties["rule"] + "." +  str(job_properties["jobid"]) + "\t" + job_properties["cluster"]["name"] + "\n")
 f.close()
 
 # call the command

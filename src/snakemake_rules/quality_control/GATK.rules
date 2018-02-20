@@ -3,32 +3,39 @@
 
 __author__ = "Hassan Foroughi Asl"
 
+bam_dir = config["analysis"]["analysis_dir"] + "/" + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "/" + "bam/"
+
 rule GATK_baserecalibrator:
   input:
-      bam=lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".sorted.rmdup.bam",
-      fa=config["path"]["genomefa"] + config["references"]["genomefa"],
+    bam = lambda wildcard: bam_dir + config["samples"][wildcard.sample] + ".sorted.rmdup.bam",
+    fa = config["path"]["genomefa"] + config["references"]["genomefa"],
+    knownsites = config["path"]["genomefa"] + config["references"]["knownsite_vcf"], 
   output:
-      config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl",
-  conda:
-    config["path"]["condaenv"] + "core_python36.yaml"
+    bam_dir + "{sample}.sorted.rmdup.bsrcl",
+  params:
+    conda = config["condaenvs"]["cancer_core_addition_python36"],
   shell:
-      "gatk-launch BaseRecalibrator "
-      "--reference {input.fa} "
-      "--known-sites ../../data/simulated_data_131217/ref_data/samples/tumor.mutations.vcf "
-      "-I {input.bam} --output {output}"
+    "source activate {params.conda}; "
+    "gatk-launch BaseRecalibrator "
+        "--reference {input.fa} "
+        "--known-sites {input.knownsites} " 
+        "-I {input.bam} "
+        "--output {output}; "
+    "source deactivate; "
 
 rule GATK_printreads:
   input:
-    fa=config["path"]["genomefa"] + config["references"]["genomefa"],
-    bsrcl=lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".sorted.rmdup.bsrcl",
-    bam=lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".sorted.rmdup.bam",
+    fa = config["path"]["genomefa"] + config["references"]["genomefa"],
+    bsrcl = lambda wildcard: bam_dir + config["samples"][wildcard.sample] + ".sorted.rmdup.bsrcl",
+    bam = lambda wildcard: bam_dir + config["samples"][wildcard.sample] + ".sorted.rmdup.bam",
   output:
-    config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl.bam",
-  conda:
-    config["path"]["condaenv"] + "core_python36.yaml"
+    bam_dir + "{sample}.sorted.rmdup.bsrcl.bam",
+  params:
+    conda = config["condaenvs"]["cancer_core_addition_python36"],
   shell:
+    "source activate {params.conda}; "
     "gatk-launch PrintReads "
-    "--reference {input.fa} "
-    "-I {input.bam} "
-    "--output {output}; "
+        "--reference {input.fa} "
+        "-I {input.bam} "
+        "--output {output}; "
     "samtools index {input.bam}; "

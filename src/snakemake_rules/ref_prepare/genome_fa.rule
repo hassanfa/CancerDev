@@ -10,7 +10,10 @@ rule ref_genome_index:
   output:
     idx=expand(config["path"]["genomefa"]+config["references"]["genomefa"]+".{prefix}", prefix=["amb","ann","bwt","pac","sa"]),
     dict=config["path"]["genomefa"]+"genome.dict"
+  params:
+    conda=config["condaenvs"]["cancer_core_addition_python36"],
   shell:
+    "source activate {params.conda}; "
     "bwa index {input.fa}; "
     "samtools faidx {input.fa}; "
     "gatk-launch CreateSequenceDictionary -R {input.fa} -O {output.dict}; " 

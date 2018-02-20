@@ -4,26 +4,30 @@
 
 __author__ = "Hassan Foroughi Asl"
 
+cutadapt_dir = config["analysis"]["analysis_dir"] + "/" + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "/" + "cutadapt/"
+
 # remove adapter from paired end reads
 rule cutadapt:
   input:
     read1=lambda wildcards: config["path"]["fastq"] + config["fastq"][wildcards.sample]["read1"],
     read2=lambda wildcards: config["path"]["fastq"] + config["fastq"][wildcards.sample]["read2"],
   output:
-    read1=config["path"]["fastq"] +"{sample}.bwa.read1.ca.fastq",
-    read2=config["path"]["fastq"] +"{sample}.bwa.read2.ca.fastq",
-    read1_short=config["path"]["fastq"] +"{sample}.bwa.read1.ca.short.fastq",
-    read2_short=config["path"]["fastq"] +"{sample}.bwa.read2.ca.short.fastq"
+    read1 = cutadapt_dir + "{sample}.bwa.read1.ca.fastq",
+    read2 = cutadapt_dir + "{sample}.bwa.read2.ca.fastq",
+    read1_short = cutadapt_dir + "{sample}.bwa.read1.ca.short.fastq",
+    read2_short = cutadapt_dir + "{sample}.bwa.read2.ca.short.fastq"
   params:
-    adapter_3p=config["QC"]["3_p_adapter"],
-    min_seq_length=config["QC"]["min_seq_length"],
-  conda:
-    config["path"]["condaenv"] + "core_python36.yaml"
+    adapter_3p = config["QC"]["3_p_adapter"],
+    min_seq_length = config["QC"]["min_seq_length"],
+    conda = config["condaenvs"]["cancer_core_addition_python36"],
   shell:
-    "cutadapt -a {params.adapter_3p} -A {params.adapter_3p} "
-    "--minimum-length {params.min_seq_length} "
-    "--too-short-output {output.read1_short} "
-    "--too-short-paired-output {output.read2_short} "
-    "-o {output.read1} "
-    "-p {output.read2} "
-    "{input.read1} {input.read2}"
+    "source activate {params.conda}; "
+    "cutadapt "
+            "-a {params.adapter_3p} -A {params.adapter_3p} "
+            "--minimum-length {params.min_seq_length} "
+            "--too-short-output {output.read1_short} "
+            "--too-short-paired-output {output.read2_short} "
+            "-o {output.read1} "
+            "-p {output.read2} "
+            "{input.read1} {input.read2}; "
+    "source deactivate;"

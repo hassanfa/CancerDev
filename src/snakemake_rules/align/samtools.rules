@@ -3,36 +3,42 @@
 
 __author__ = "Hassan Foroughi Asl"
 
+bam_dir = config["analysis"]["analysis_dir"] + "/" + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "/" + "bam/"
+
 rule samtools_sort_index:
   input:
-      lambda wildcard: config["path"]["bamout"] + config["samples"][wildcard.sample] + ".bam"
+    lambda wildcard: bam_dir + config["samples"][wildcard.sample] + ".bam"
   output:
-      config["path"]["bamout"] + "{sample}.sorted.bam"
-  conda:
-      config["path"]["condaenv"] + "core.yaml"
+    bam_dir + "{sample}.sorted.bam"
+  params:
+    conda = config["condaenvs"]["cancer_core"],
   shell:
-      "samtools sort -o {output} {input}"
+    "source activate {params.conda}; "
+    "samtools sort -o {output} {input}; "
+    "source deactivate "
 
-rule samtools_merge:
-  input:
-    expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl.bam", sample=config["samples"]) 
-  output:
-    config["path"]["bamout"] + "All.merged.bam"
-  conda:
-    config["path"]["condaenv"] + "core.yaml"
-  shell:
-    "samtools merge -f {output} {input};"
-
-rule samtools_bed_from_bam:
-  input:
-      config["path"]["bamout"] + "All.merged.bam"
-  output:
-      config["path"]["bamout"] + "All.merged.bed"
-  conda:
-    config["path"]["condaenv"] + "core.yaml"
-  shell:
-      "samtools view {input} "
-      " | awk -v OFS=\"\\t\" "
-      "'$3~/chr/ {{if (c[$3]==0) {{c[$3]=1; min[$3]=$4; max[$3]=$4;}} "
-      "if (min[$3]>$4) min[$3]=$4; if (max[$3]<$4) max[$3]=$4}}"
-      "END{{for (x in min) print x,min[x],max[x]}}' > {output}"
+#rule samtools_merge:
+#  input:
+#    expand(config["path"]["bamout"] + "{sample}.sorted.rmdup.bsrcl.bam", sample=config["samples"]) 
+#  output:
+#    config["path"]["bamout"] + "All.merged.bam"
+#  params:
+#    conda=config["condaenvs"]["cancer_core"],
+#  shell:
+#    "source activate {params.conda}; "
+#    "samtools merge -f {output} {input};"
+#
+#rule samtools_bed_from_bam:
+#  input:
+#    config["path"]["bamout"] + "All.merged.bam"
+#  output:
+#    config["path"]["bamout"] + config["bed"]["variant_panel"]
+#  params:
+#    conda=config["condaenvs"]["cancer_core"],
+#  shell:
+#    "source activate {params.conda}; "
+#    "samtools view {input} "
+#    " | awk -v OFS=\"\\t\" "
+#    "'$3~/chr/ {{if (c[$3]==0) {{c[$3]=1; min[$3]=$4; max[$3]=$4;}} "
+#    "if (min[$3]>$4) min[$3]=$4; if (max[$3]<$4) max[$3]=$4}}"
+#    "END{{for (x in min) print x,min[x],max[x]}}' > {output}"
