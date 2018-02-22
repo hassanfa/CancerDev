@@ -3,8 +3,8 @@
 
 __author__ = "Hassan Foroughi Asl"
 
-bam_dir = config["analysis"]["analysis_dir"] + "/" + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "/" + "bam/"
-vcf_dir = config["analysis"]["analysis_dir"] + "/" + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "/" + "vcf/"
+bam_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + config["analysis"]["result"] + "bam/"
+vcf_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + config["analysis"]["result"] + "vcf/"
 manta_dir = "manta/"
 
 rule manta_somatic:
@@ -13,7 +13,7 @@ rule manta_somatic:
     bamN = bam_dir + config["samples"]["normal"] + ".sorted.rmdup.bsrcl.bam",
     bamT = bam_dir + config["samples"]["tumor"] + ".sorted.rmdup.bsrcl.bam",
   output:
-    vcf_dir + manta_dir + config["vcf"]["manta"] 
+    expand(vcf_dir + manta_dir + "{vcf_file}", vcf_file=config["vcf"]["manta"]),
   params:
     tmpdir = vcf_dir + "manta_tmp",
     result_dir = vcf_dir + manta_dir,
@@ -28,4 +28,4 @@ rule manta_somatic:
         "--referenceFasta={input.fa} "
         "--runDir={params.tmpdir}; "
     "python {params.tmpdir}/runWorkflow.py -m {params.runmode};"
-    "mv {params.tmpdir}/results/variants/candidateSV.vcf.gz {output}.gz; gunzip {output}.gz"
+    "mv {params.tmpdir}/results/variants/*vcf.gz {params.result_dir};"

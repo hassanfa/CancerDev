@@ -2,28 +2,33 @@
 # coding: utf-8
 
 __author__ = "Hassan Foroughi Asl"
-from os.path import join
+
+bam_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + config["analysis"]["result"] + "bam/"
+vcf_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + config["analysis"]["result"] + "vcf/"
+vardict_dir = "vardict/"
 
 rule vardict_varcall_paired:
   input:
-    fa=config["path"]["genomefa"] + config["references"]["genomefa"],
-    bamN=config["path"]["bamout"] + config["samples"]["normal"] + ".sorted.rmdup.bsrcl.bam",
-    bamT=config["path"]["bamout"] + config["samples"]["tumor"] + ".sorted.rmdup.bsrcl.bam",
-    bed=config["path"]["bamout"] + config["bed"]["variant_panel"],
+    fa = config["path"]["genomefa"] + config["references"]["genomefa"],
+    bamN = bam_dir + config["samples"]["normal"] + ".sorted.rmdup.bsrcl.bam",
+    bamT = bam_dir + config["samples"]["tumor"] + ".sorted.rmdup.bsrcl.bam",
+    bed = config["path"]["panel"] + config["bed"]["variant_panel"],
   output:
-    config["path"]["variantcaller"]+config["vcf"]["vardict"]
+    vcf_dir + vardict_dir + config["vcf"]["vardict"]
   params:
-    af="0.01",
-    max_pval="0.9",
-    max_mm="4.5",
-    col_info="-c 1 -S 2 -E 3 -g 4",
-    name="TestSample",
-    conda=config["condaenvs"]["cancer_core"]
+    af = "0.01",
+    max_pval = "0.9",
+    max_mm = "4.5",
+    col_info = "-c 1 -S 2 -E 3 -g 4",
+    name = "TestSample",
+    conda = config["condaenvs"]["cancer_core"]
   shell:
+    "source activate {params.conda}; "
     "vardict -G {input.fa} -f {params.af} -N {params.name} "
-    "-b \"{input.bamT}|{input.bamN}\" "
-    "{params.col_info} {input.bed} "
-    "| testsomatic.R "
-    "| var2vcf_paired.pl -P {params.max_pval} "
-    "-m {params.max_mm} -M -f {params.af} -N {params.name} "
-    "> {output}"
+        "-b \"{input.bamT}|{input.bamN}\" "
+        "{params.col_info} {input.bed} "
+        "| testsomatic.R "
+        "| var2vcf_paired.pl -P {params.max_pval} "
+        "-m {params.max_mm} -M -f {params.af} -N {params.name} "
+        "> {output}; "
+    "source deactivate;"

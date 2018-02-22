@@ -3,17 +3,19 @@
 
 __author__ = "Hassan Foroughi Asl"
 
-bam_dir = config["analysis"]["analysis_dir"] + "/" + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "/" + "bam/"
-vcf_dir = config["analysis"]["analysis_dir"] + "/" + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "/" + "vcf/"
+bam_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + config["analysis"]["result"] + "bam/"
+vcf_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + config["analysis"]["result"] + "vcf/"
 strelka_dir = "strelka/"
+manta_dir = "manta/"
 
 rule strelka_somatic:
   input:
     fa = config["path"]["genomefa"] + config["references"]["genomefa"],
     bamN = bam_dir + config["samples"]["normal"] + ".sorted.rmdup.bsrcl.bam",
     bamT = bam_dir + config["samples"]["tumor"] + ".sorted.rmdup.bsrcl.bam",
+    mantaindel = vcf_dir + manta_dir + "candidateSmallIndels.vcf.gz" 
   output:
-    vcf_dir + strelka_dir + config["vcf"]["strelka"] 
+    expand(vcf_dir + strelka_dir + "{vcf_file}", vcf_file=config["vcf"]["strelka"])
   params:
     tmpdir = vcf_dir + "strelka_tmp",
     result_dir = vcf_dir + strelka_dir,
@@ -25,7 +27,8 @@ rule strelka_somatic:
         "--normalBam={input.bamN} "
         "--tumorBam={input.bamT} "
         "--referenceFasta={input.fa} "
+        "--indelCandidates {input.mantaindel}"
         "--outputCallableRegions "
         "--runDir={params.tmpdir}; "
     "python {params.tmpdir}/runWorkflow.py -m {params.runmode};"
-    "mv {params.tmpdir}/results/variants/somatic.indels.vcf.gz {output}.gz; gunzip {output}.gz"
+    "mv {params.tmpdir}/results/variants/*vcf.gz {params.result_dir};"

@@ -14,3 +14,8 @@ data/snakemake_tutorial_data_131217/ref_data/
 conda_requirement_list.sh
 data/TCRB_data_020118/
 src/workflows/prototype.png
+src/workflows/StrelkaSomaticWorkflow/
+src/workflows/logs*
+src/workflows/script*
+src/workflows/helloworld*
+data/simulated_data_131217/patient_0
