@@ -1,0 +1,19 @@
+#!python
+# vim: syntax=python tabstop=4 expandtab
+# coding: utf-8
+
+configfile: "../config_files/config_simulated_data.json"
+
+sample_path = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + "/" 
+
+rule:
+  output:
+    script_path = sample_path + config["analysis"]["script"],
+    result_path = sample_path + config["analysis"]["result"],
+    log_path = sample_path + config["analysis"]["log"],
+    readme_path = sample_path + "readme.md",
+  shell:
+    "mkdir -p {output.script_path}; "
+    "mkdir -p {output.result_path}; "
+    "mkdir -p {output.log_path}; "
+    "touch {output.readme_path}; "
