@@ -19,3 +19,4 @@ src/workflows/logs*
 src/workflows/script*
 src/workflows/helloworld*
 data/simulated_data_131217/patient_0
+data/simulated_data_131217/patient_0result*

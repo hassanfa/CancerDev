@@ -6,7 +6,9 @@ configfile: "../config_files/config_simulated_data.json"
 
 sample_path = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + "/" 
 
-rule:
+localrules: createdir
+
+rule createdir:
   output:
     script_path = sample_path + config["analysis"]["script"],
     result_path = sample_path + config["analysis"]["result"],

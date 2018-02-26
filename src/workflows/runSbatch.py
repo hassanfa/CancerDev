@@ -41,6 +41,7 @@ resultpath = os.path.join(sample_config["analysis"]["analysis_dir"], sample_conf
 os.system('mkdir -p ' + logpath)
 os.system('mkdir -p ' + scriptpath)
 os.system('mkdir -p ' + resultpath)
+
 os.system('cp ' + jobscript + ' ' + scriptpath)
 scriptname=jobscript.split("/")
 scriptname=scriptname[-1]

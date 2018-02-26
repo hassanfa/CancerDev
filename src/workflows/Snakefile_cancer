@@ -30,8 +30,6 @@ include:
 include:
   rule_dir + "snakemake_rules/variant_calling/vardict.rule"
 
-subworkflow otherworkflow:
-    snakefile: "Snakefile_createdir"
 
 cutadapt_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"]  + config["analysis"]["result"]  + "cutadapt/"
 fastqc_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"]  + config["analysis"]["result"]  + "fastqc/"
@@ -44,7 +42,6 @@ vardict_dir = "vardict/"
 
 rule all:
   input:
-    otherworkflow(config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] +  "/" + "readme.md"),
     expand(vcf_dir + manta_dir + "{vcf_file}", vcf_file=config["vcf"]["manta"]),
     expand(vcf_dir + strelka_dir + "{vcf_file}", vcf_file=config["vcf"]["strelka"]),
     vcf_dir + vardict_dir + config["vcf"]["vardict"],
