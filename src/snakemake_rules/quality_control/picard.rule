@@ -3,16 +3,16 @@
 
 __author__ = "Hassan Foroughi Asl"
 
-bam_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + config["analysis"]["result"] + "bam/"
+bam_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "bam/"
+resultdir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"]
 
 rule picard_remove_duplicate:
   input:
-    lambda wildcard: bam_dir + config["samples"][wildcard.sample] + ".sorted.bam"
+    bam_dir + "{sample}.sorted.bam"
   output:
-    rmdup = bam_dir + "{sample}.sorted.rmdup.bam",
-    bai = bam_dir + "{sample}.sorted.rmdup.bam.bai"
+    rmdup = bam_dir + "{sample}.sorted.rmdup.bam"
   log:
-    stats = bam_dir + "{sample}.sorted.rmdup.bam.txt"
+    stats = bam_dir + "{sample}.sorted.rmdup.txt"
   params:
     conda = config["condaenvs"]["cancer_core_addition_python36"],
   shell:
@@ -27,3 +27,37 @@ rule picard_remove_duplicate:
     "samtools index {output.rmdup}; "
     "source deactivate; "
 
+rule picard_bed_to_interval:
+  input:
+    dict = (config["path"]["genomefa"] + config["references"]["genomefa"]).replace(".fasta",".dict"),
+    bed = config["path"]["panel"] + config["bed"]["variant_panel"],
+  output:
+    resultdir + config["bed"]["variant_panel"] + "interval"
+  params:
+    conda = config["condaenvs"]["cancer_core_addition_python36"],
+  shell:
+    "source activate {params.conda};"
+    "picard BedToIntervalList "
+      "I={input.bed} "
+      "O={output} "
+      "SD={input.dict}; "
+    "source deactivate; "
+
+rule picard_collectHSmetric:
+  input:
+    bam = bam_dir + "{sample}.sorted.bam",
+    bedinterval = resultdir + config["bed"]["variant_panel"] + "interval"
+  output:
+    bam_dir + "{sample}.sorted.rmdup.hsmetric"
+  params:
+    conda = config["condaenvs"]["cancer_core_addition_python36"],
+  shell:
+    "source activate {params.conda};"
+    "samtools index {input.bam}; "
+    "picard CollectHsMetrics "
+      "BI={input.bedinterval} "
+      "TI={input.bedinterval} "
+      "I={input.bam} "
+      "O={output} "
+      "METRIC_ACCUMULATION_LEVEL=LIBRARY;"
+    "source deactivate; "

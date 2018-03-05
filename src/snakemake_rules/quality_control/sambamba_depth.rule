@@ -3,11 +3,11 @@
 
 __author__ = "Hassan Foroughi Asl"
 
-bam_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + config["analysis"]["result"] + "bam/"
+bam_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "bam/"
 
 rule sambamba_depth:
   input:
-    bam = lambda wildcard: bam_dir + config["samples"][wildcard.sample] + ".sorted.rmdup.bam",
+    bam = bam_dir + "{sample}" + ".sorted.rmdup.bam",
     bed = config["path"]["panel"] + config["bed"]["variant_panel"]
   output:
     bam_dir + "{sample}.sorted.rmdup.cov.bed"

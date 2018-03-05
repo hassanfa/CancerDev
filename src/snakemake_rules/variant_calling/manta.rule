@@ -3,15 +3,15 @@
 
 __author__ = "Hassan Foroughi Asl"
 
-bam_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + config["analysis"]["result"] + "bam/"
-vcf_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + config["analysis"]["result"] + "vcf/"
+bam_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "bam/"
+vcf_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "vcf/"
 manta_dir = "manta/"
 
 rule manta_somatic:
   input:
     fa = config["path"]["genomefa"] + config["references"]["genomefa"],
-    bamN = bam_dir + config["samples"]["normal"] + ".sorted.rmdup.bsrcl.bam",
-    bamT = bam_dir + config["samples"]["tumor"] + ".sorted.rmdup.bsrcl.bam",
+    bamN = bam_dir + "normal.merged.bam", 
+    bamT = bam_dir + "tumor.merged.bam",
   output:
     expand(vcf_dir + manta_dir + "{vcf_file}", vcf_file=config["vcf"]["manta"]),
   params:
@@ -19,6 +19,7 @@ rule manta_somatic:
     result_dir = vcf_dir + manta_dir,
     runmode = "local",
     conda = config["condaenvs"]["cancer_core_addition_python27"]
+  threads: 4
   shell:
     "source activate {params.conda};"
     "mkdir -p {params.result_dir}; "
@@ -27,5 +28,7 @@ rule manta_somatic:
         "--tumorBam={input.bamT} "
         "--referenceFasta={input.fa} "
         "--runDir={params.tmpdir}; "
-    "python {params.tmpdir}/runWorkflow.py -m {params.runmode};"
-    "mv {params.tmpdir}/results/variants/*vcf.gz {params.result_dir};"
+    "python {params.tmpdir}/runWorkflow.py -m {params.runmode} -j {threads};"
+    "mv {params.tmpdir}/results/variants/*vcf.gz {params.result_dir}; "
+    "for f in $(ls {params.result_dir}*.vcf.gz); do tabix $f; done; "
+    "source deactivate; "

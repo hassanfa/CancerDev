@@ -4,26 +4,30 @@
 
 __author__ = "Hassan Foroughi Asl"
 
-cutadapt_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + config["analysis"]["result"] + "cutadapt/"
+cutadapt_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "cutadapt/"
 
 # remove adapter from paired end reads
 rule cutadapt:
   input:
-    read1=lambda wildcards: config["path"]["fastq"] + config["fastq"][wildcards.sample]["read1"],
-    read2=lambda wildcards: config["path"]["fastq"] + config["fastq"][wildcards.sample]["read2"],
+    #lambda wildcards: expand(config["path"]["fastq"] + config["samples"][wildcards.sample] + "_{read_num}.fastq.gz", read_num = ["1", "2"])
+    read1=config["path"]["fastq"] + "{sample}" + "_1.fastq.gz",
+    read2=config["path"]["fastq"] + "{sample}" + "_2.fastq.gz",
+    #read2=config["path"]["fastq"] + config["fastq"][wildcards.sample]["read2"] + ".fastq.gz",
   output:
-    read1 = cutadapt_dir + "{sample}.bwa.read1.ca.fastq",
-    read2 = cutadapt_dir + "{sample}.bwa.read2.ca.fastq",
-    read1_short = cutadapt_dir + "{sample}.bwa.read1.ca.short.fastq",
-    read2_short = cutadapt_dir + "{sample}.bwa.read2.ca.short.fastq"
+    read1 = cutadapt_dir + "{sample}_1.ca.fastq.gz",
+    read2 = cutadapt_dir + "{sample}_2.ca.fastq.gz",
+    read1_short = cutadapt_dir + "{sample}_1.ca.short.fastq.gz",
+    read2_short = cutadapt_dir + "{sample}_2.ca.short.fastq.gz"
   params:
-    adapter_3p = config["QC"]["3_p_adapter"],
+    lambda wildcards: config["path"]["fastq"] + config["samples"][wildcards.sample]["file_prefix"], 
+    adapter = config["QC"]["adapter"],
     min_seq_length = config["QC"]["min_seq_length"],
     conda = config["condaenvs"]["cancer_core_addition_python36"],
+  threads: 4
   shell:
     "source activate {params.conda}; "
     "cutadapt "
-            "-a {params.adapter_3p} -A {params.adapter_3p} "
+            "-b {params.adapter} -B {params.adapter} "
             "--minimum-length {params.min_seq_length} "
             "--too-short-output {output.read1_short} "
             "--too-short-paired-output {output.read2_short} "

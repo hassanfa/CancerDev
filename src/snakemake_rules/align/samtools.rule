@@ -3,18 +3,19 @@
 
 __author__ = "Hassan Foroughi Asl"
 
-bam_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + config["analysis"]["result"] + "bam/"
+bam_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "bam/"
 
 rule samtools_sort_index:
   input:
-    lambda wildcard: bam_dir + config["samples"][wildcard.sample] + ".bam"
+    bam_dir + "{sample}.bam"
   output:
     bam_dir + "{sample}.sorted.bam"
   params:
     conda = config["condaenvs"]["cancer_core"],
+  threads: 4
   shell:
     "source activate {params.conda}; "
-    "samtools sort -o {output} {input}; "
+    "samtools sort -@ {threads} -o {output} {input}; "
     "source deactivate "
 
 #rule samtools_merge:

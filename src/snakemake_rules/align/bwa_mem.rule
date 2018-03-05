@@ -3,24 +3,26 @@
 
 __author__ = "Hassan Foroughi Asl"
 
-bam_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + config["analysis"]["result"] + "bam/"
-cutadapt_dir = fastqc_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + config["analysis"]["result"] + "cutadapt/"
+bam_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "bam/"
+cutadapt_dir = fastqc_dir = config["analysis"]["analysis_dir"] + config["analysis"]["sample_id"] + "/" + config["analysis"]["result"] + "cutadapt/"
 
 # Following rule will take input fastq files, align them using bwa mem, and convert the output to sam format
 rule bwa_mem:
   input:
     fa = config["path"]["genomefa"] + config["references"]["genomefa"],
-    read1 = lambda wildcards: cutadapt_dir + (config["fastq"][wildcards.sample]["read1"]).replace("fastq","ca.fastq"),
-    read2 = lambda wildcards: cutadapt_dir + (config["fastq"][wildcards.sample]["read2"]).replace("fastq","ca.fastq"),
+    read1 = cutadapt_dir + "{sample}_1.ca.fastq.gz",
+    read2 = cutadapt_dir + "{sample}_2.ca.fastq.gz",
     refidx = expand(config["path"]["genomefa"] + config["references"]["genomefa"] + ".{prefix}", prefix=["amb","ann","bwt","pac","sa"])
   output:
     bamout = bam_dir + "{sample}.bam"
   params:
-    header_1 = "'@RG\tID:foo\tSM:" + "{sample}" + "\tPL:ILLUMINAi'",
+    header_1 = "'@RG\\tID:" +  "{sample}" + "\\tSM:" + "{sample}" + "\\tPL:ILLUMINAi'",
     conda = config["condaenvs"]["cancer_core"],
+  threads: 4
   shell:
     "source activate {params.conda}; "
     "bwa mem "
+        "-t {threads} "
         "-R  {params.header_1} "
         "-M "
         "-v 1 "
