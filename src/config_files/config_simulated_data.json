@@ -35,7 +35,7 @@
       }
   },
   "QC": {
-      "3_p_adapter": "AAAAAAAAAAAAAAAGGGGTGTGTGTGTTGCCCC",
+      "adapter": "AAAAAAAAAAAAAAAGGGGTGTGTGTGTTGCCCC",
       "min_seq_length": "25"
   },
   "vcf": {
