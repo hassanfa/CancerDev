@@ -9,4 +9,5 @@ dependencies:
   - sambamba=0.6.6
   - samtools=1.6
   - vardict=2017.11.23
+  - tabix=0.2.5
 prefix: /home/hassan.foroughi/miniconda2/envs/cancer_core
