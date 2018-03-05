@@ -33,5 +33,5 @@ rule strelka_somatic:
         "--runDir={params.tmpdir}; "
     "python {params.tmpdir}/runWorkflow.py -m {params.runmode} -j {threads}; "
     "mv {params.tmpdir}/results/variants/*vcf.gz {params.result_dir}; "
-    "for f in $(ls {params.result_dir}*.vcf.gz); do tabix $f; done; "
+    "for f in $(ls {params.result_dir}*.vcf.gz); do tabix -p vcf $f; done; "
     "source deactivate; "
