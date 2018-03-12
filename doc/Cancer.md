@@ -74,7 +74,6 @@
 **_Excluding multiple method comparison or benchmarking tools_**
 
 * **BreakDancer**: Chen, K., Wallis, J. W., Mclellan, M. D., Larson, D. E., Kalicki, J. M., Pohl, C. S., … Elaine, R. (2013). BreakDancer - An algorithm for high resolution mapping of genomic structure variation. Nature Methods, 6(9), 677–681. https://doi.org/10.1038/nmeth.1363.BreakDancer
-
 * **Pindel**: Ye, K., Schulz, M. H., Long, Q., Apweiler, R., & Ning, Z. (2009). Pindel: A pattern growth approach to detect break points of large deletions and medium sized insertions from paired-end short reads. Bioinformatics, 25(21), 2865–2871. https://doi.org/10.1093/bioinformatics/btp394
 * **SVDetect**: Zeitouni, B., Boeva, V., Janoueix-Lerosey, I., Loeillet, S., Legoix-né, P., Nicolas, A., … Barillot, E. (2010). SVDetect: A tool to identify genomic structural variations from paired-end and mate-pair sequencing data. Bioinformatics, 26(15), 1895–1896. https://doi.org/10.1093/bioinformatics/btq293
 * **Purityest**: Su, X., Zhang, L., Zhang, J., Meric-bernstam, F., & Weinstein, J. N. (2012). Purityest: Estimating purity of human tumor samples using next-generation sequencing data. Bioinformatics, 28(17), 2265–2266. https://doi.org/10.1093/bioinformatics/bts365
